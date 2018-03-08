@@ -5,13 +5,13 @@
 
 class Player {
 	private:
-		bool isAi;
+		bool isAi; //0 = human, 1 = robot
 		Ai ai;
 	public:
-		void Player(Ai ai);
-		void Player();
+		Player(Ai ai); //makes a new computer player of AI type ai
+		Player(); //makes a new human player
 		
 		
-}
+};
 
 #endif /* PLAYER_H */

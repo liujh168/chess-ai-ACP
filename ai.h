@@ -3,6 +3,6 @@
 
 class Ai {
 	
-}
+};
 
 #endif /* AI_H */
