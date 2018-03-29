@@ -5,6 +5,7 @@
 
 class Piece {
 	public:
+		std::pair<int, int>* moveArr;
 		bool type; //0 = white, 1 = black
 		Piece();
 		Piece(bool side); //Sets the colour of the piece
@@ -15,42 +16,36 @@ class Pawn : public Piece {
 	public:
 		Pawn();
 		Pawn(bool side);
-		std::pair<int, int>* move();
 };
 
 class Rook : public Piece {
 	public:
 		Rook();
 		Rook(bool side);
-		std::pair<int, int>* move();
 };
 
 class Knight : public Piece {
 	public:
 		Knight();
 		Knight(bool side);
-		std::pair<int, int>* move();
 };
 
-class Castle : public Piece {
+class Bishop : public Piece {
 	public:
-		Castle();
-		Castle(bool side);
-		std::pair<int, int>* move();
+		Bishop();
+		Bishop(bool side);
 };
 
 class King : public Piece {
 	public:
 		King();
 		King(bool side);
-		std::pair<int, int>* move();
 };
 
 class Queen : public Piece {
 	public:
 		Queen();
 		Queen(bool side);
-		std::pair<int, int>* move();
 };
 
 #endif /* PIECE_H */
