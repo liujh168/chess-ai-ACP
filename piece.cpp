@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "piece.h"
 
 Piece::Piece() {
@@ -190,3 +191,9 @@ Queen::Queen(bool side) {
 		}
 	}
 }
+=======
+#include <iostream>
+#include "piece.h"
+
+using namespace std;
+>>>>>>> de33aced8cb9d1bfe65d2bd148df828adb851568
