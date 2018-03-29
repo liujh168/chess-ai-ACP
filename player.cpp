@@ -5,10 +5,10 @@
 using namespace std;
 
 void player::Player() {
-	isAi = False;
+	isAi = false;
 }
 
 void player::Player(Ai ai) {
-	isAi = True
+	isAi = true;
 	ai = ai;
 }
