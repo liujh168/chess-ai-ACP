@@ -1,5 +1,7 @@
-<<<<<<< HEAD
+#include <iostream>
 #include "piece.h"
+
+using namespace std;
 
 Piece::Piece() {
 	moveArr[0].first = 0;
@@ -11,12 +13,14 @@ std::pair<int, int>* Piece::move() {
 }
 
 Pawn::Pawn() {
+	isInit = true;
 	type = 0;
 	moveArr[0].first = 0;
 	moveArr[0].second = -1;
 }
 
 Pawn::Pawn(bool side) {
+	isInit = true;
 	type = side;
 	int temp;
 	if(type) temp = -1;
@@ -27,6 +31,7 @@ Pawn::Pawn(bool side) {
 }
 
 Rook::Rook() {
+	isInit = true;
 	type = 0;
 	int z = 0;
 	for(int x = 0; x < 8; x++) {
@@ -39,6 +44,7 @@ Rook::Rook() {
 }
 
 Rook::Rook(bool side) {
+	isInit = true;
 	type = 1;
 	int z = 0;
 	for(int x = 0; x < 7; x++) {
@@ -51,6 +57,7 @@ Rook::Rook(bool side) {
 }
 
 Knight::Knight() {
+	isInit = true;
 	type = 0;
 	int z = 0;
 	for(int y = -1; y < 2; y++) {
@@ -74,6 +81,7 @@ Knight::Knight() {
 }
 
 Knight::Knight(bool side) {
+	isInit = true;
 	type = side;
 	int z = 0;
 	for(int y = -1; y < 2; y++) {
@@ -97,6 +105,7 @@ Knight::Knight(bool side) {
 }
 
 Bishop::Bishop() {
+	isInit = true;
 	type = 0;
 	int z = 0;
 	for(int x = -7; x < 8; x++) {
@@ -111,6 +120,7 @@ Bishop::Bishop() {
 }
 
 Bishop::Bishop(bool side) {
+	isInit = true;
 	type = side;
 	int z = 0;
 	for(int x = -7; x < 8; x++) {
@@ -125,6 +135,7 @@ Bishop::Bishop(bool side) {
 }
 
 King::King() {
+	isInit = true;
 	type = 0;
 	int z = 0;
 	for(int x = -1; x < 2; x++) {
@@ -138,6 +149,7 @@ King::King() {
 }
 
 King::King(bool side) {
+	isInit = true;
 	type = side;
 	int z = 0;
 	for(int x = -1; x < 2; x++) {
@@ -151,6 +163,7 @@ King::King(bool side) {
 }
 
 Queen::Queen() {
+	isInit = true;
 	type = 0;
 	int z = 0;
 	for(int x = -7; x < 8; x++) {
@@ -172,6 +185,7 @@ Queen::Queen() {
 }
 
 Queen::Queen(bool side) {
+	isInit = true;
 	type = side;
 	int z = 0;
 	for(int x = -7; x < 8; x++) {
@@ -191,9 +205,3 @@ Queen::Queen(bool side) {
 		}
 	}
 }
-=======
-#include <iostream>
-#include "piece.h"
-
-using namespace std;
->>>>>>> de33aced8cb9d1bfe65d2bd148df828adb851568

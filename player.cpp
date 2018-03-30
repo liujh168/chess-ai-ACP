@@ -4,11 +4,11 @@
 
 using namespace std;
 
-void player::Player() {
+Player::Player() {
 	isAi = false;
 }
 
-void player::Player(Ai ai) {
+Player::Player(Ai ai) {
 	isAi = true;
-	ai = ai;
+	this->ai = ai;
 }
