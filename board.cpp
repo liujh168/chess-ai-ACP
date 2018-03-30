@@ -61,3 +61,12 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 	}
 	return false;
 }
+
+void Board::printBoard() {
+	for(int x = 0; x < 8; x++) {
+		for(int y = 0; y < 8; y++) {
+			std::cout << board[y][x].ident << ' ';
+		}
+		std::cout << endl;
+	}
+}

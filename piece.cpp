@@ -4,6 +4,7 @@
 using namespace std;
 
 Piece::Piece() {
+	ident = '*';
 	moveArr[0].first = 0;
 	moveArr[0].second = 0;
 }
@@ -13,6 +14,7 @@ std::pair<int, int>* Piece::move() {
 }
 
 Pawn::Pawn() {
+	ident = 'P';
 	isInit = true;
 	type = 0;
 	moveArr[0].first = 0;
@@ -20,6 +22,7 @@ Pawn::Pawn() {
 }
 
 Pawn::Pawn(bool side) {
+	ident = 'P';
 	isInit = true;
 	type = side;
 	int temp;
@@ -31,6 +34,7 @@ Pawn::Pawn(bool side) {
 }
 
 Rook::Rook() {
+	ident = 'R';
 	isInit = true;
 	type = 0;
 	int z = 0;
@@ -44,6 +48,7 @@ Rook::Rook() {
 }
 
 Rook::Rook(bool side) {
+	ident = 'R';
 	isInit = true;
 	type = 1;
 	int z = 0;
@@ -57,6 +62,7 @@ Rook::Rook(bool side) {
 }
 
 Knight::Knight() {
+	ident = 'N';
 	isInit = true;
 	type = 0;
 	int z = 0;
@@ -81,6 +87,7 @@ Knight::Knight() {
 }
 
 Knight::Knight(bool side) {
+	ident = 'N';
 	isInit = true;
 	type = side;
 	int z = 0;
@@ -105,6 +112,7 @@ Knight::Knight(bool side) {
 }
 
 Bishop::Bishop() {
+	ident = 'B';
 	isInit = true;
 	type = 0;
 	int z = 0;
@@ -120,6 +128,7 @@ Bishop::Bishop() {
 }
 
 Bishop::Bishop(bool side) {
+	ident = 'B';
 	isInit = true;
 	type = side;
 	int z = 0;
@@ -135,6 +144,7 @@ Bishop::Bishop(bool side) {
 }
 
 King::King() {
+	ident = 'K';
 	isInit = true;
 	type = 0;
 	int z = 0;
@@ -149,6 +159,7 @@ King::King() {
 }
 
 King::King(bool side) {
+	ident = 'K';
 	isInit = true;
 	type = side;
 	int z = 0;
@@ -163,6 +174,7 @@ King::King(bool side) {
 }
 
 Queen::Queen() {
+	ident = 'Q';
 	isInit = true;
 	type = 0;
 	int z = 0;
@@ -185,6 +197,7 @@ Queen::Queen() {
 }
 
 Queen::Queen(bool side) {
+	ident = 'Q';
 	isInit = true;
 	type = side;
 	int z = 0;

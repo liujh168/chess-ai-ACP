@@ -6,6 +6,7 @@
 class Piece {
 	public:
 		std::pair<int, int>* moveArr;
+		char ident;
 		bool type; //0 = white, 1 = black
 		bool isInit; //True if the Piece has been initialized as a Pawn, Rook, Knight, Bishop, King, or Queen
 		Piece();
