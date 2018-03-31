@@ -56,7 +56,7 @@ Rook::Rook() {
 Rook::Rook(bool side) {
 	ident = 'R';
 	isInit = true;
-	type = 1;
+	type = side;
 	int z = 0;
 	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
