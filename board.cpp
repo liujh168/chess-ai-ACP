@@ -70,6 +70,7 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 		}
 	}
 	std::pair<int, int>* moves = board[x1][y1].move();
+	cout << moves[0].first << " " << moves[0].second << endl;
 	for(int x = 0; moves[x].first!= 0 && moves[x].second != 0; x++) {
 		if(moves[x].first + x1 == x2 && moves[x].second + y1 == y2) {
 			if(!(board[x2][y2].ident == '*' || board[x2][y2].type != board[x1][y1].type)) break;
@@ -94,7 +95,7 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 void Board::printBoard() {
 	for(int x = 0; x < 8; x++) {
 		for(int y = 0; y < 8; y++) {
-			std::cout << board[y][x].ident << ' ';
+			std::cout << board[y][7-x].ident << ' ';
 		}
 		std::cout << endl;
 	}
