@@ -1,9 +1,11 @@
 #include <iostream>
 #include "board.h"
+#include <math.h>
 
 using namespace std;
 
 Board::Board() {
+	turn = false;
 	white = Player();
 	black = Player();
 	board[0][0] = Rook(false);
@@ -29,6 +31,7 @@ Board::Board() {
 Board::Board(Player white, Player black) {
 	this->white = white;
 	this->black = black;
+	turn = false;
 	board[0][0] = Rook(false);
 	board[7][0] = Rook(false);
 	board[1][0] = Knight(false);
@@ -50,15 +53,31 @@ Board::Board(Player white, Player black) {
 }
 
 bool Board::movePiece(int x1, int y1, int x2, int y2) {
-	if(x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) return false;
-	if(!board[x1][y1].isInit) return false;
-	std::pair<int, int>* moves = board[x1][y1].move();
-	for(int x = 0; moves[x].first!= 0 && moves[x].second != 0; x++) {
-		if(moves[x].first + x1 == x2 && moves[x].second + y1 == y2) {
-			board[x2][y2] = board[x1][y1];
+	if(x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { std::cout << "Out of bounds" << std::endl; return false; }
+	if(!board[x1][y1].isInit) { std::cout << "Target Piece doesn't exist" << std::endl; return false; }
+	if(!(board[x1][y1].type == turn)) { std::cout << "Target piece is not yours" << std::endl; return false; }
+	if(board[x1][y1].ident == 'P') { //Special Pawn movement/attacking 
+		if(x1 == x2 && (y1 == 6 || y2 == 1) && board[x2][y2].ident == '*' && abs(y2-y1) == 2) {
+			board[x2][y2] = board[x1][y1]; 
+			board[x1][y1] = Piece();
+			return true;
+		}
+		if(abs(x1-x2) == 1 && abs(y1-y2) == 1 && board[x2][y2].ident != '*') {
+			board[x2][y2] = board[x1][y1]; 
+			board[x1][y1] = Piece();
 			return true;
 		}
 	}
+	std::pair<int, int>* moves = board[x1][y1].move();
+	for(int x = 0; moves[x].first!= 0 && moves[x].second != 0; x++) {
+		if(moves[x].first + x1 == x2 && moves[x].second + y1 == y2) {
+			if(board[x1][y1].ident == 'P' && board[x2][y2].ident != '*') break; 
+			board[x2][y2] = board[x1][y1];
+			board[x1][y1] = Piece();
+			return true;
+		}
+	}
+	std::cout << "Illegal move" << endl;
 	return false;
 }
 

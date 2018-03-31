@@ -30,8 +30,9 @@ int main() {
 	for (int i=0; i<8; i++) {
 		for(int j=0; j<8; j++) {
 		
-			cout << "The location of the pieces: "<< ((char) i + 63) + j+1 << endl;
+			//cout << "The location of the pieces: "<< ((char) i + 63) + j+1 << endl;
 		}
 	}
-
+	b.printBoard();
+return 0;
 }

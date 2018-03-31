@@ -10,6 +10,7 @@ class Board {
 		Piece board[8][8];
 		Player white;
 		Player black;
+		bool turn; //0 - White, 1 black
 	public:
 		Board(); //Default constructor, white is human and black is AI
 		Board(Player white, Player black); //Initialize the Board with two players that are specified to be either AI or human
