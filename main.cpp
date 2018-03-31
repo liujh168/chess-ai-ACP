@@ -7,7 +7,8 @@
 using namespace std;
 
 int main() {
-	string input;
+	Board b;
+	/*string input;
 	string movedTo;
 	Board b = Board();
 	int validMove = 0;
@@ -25,7 +26,7 @@ int main() {
 			cin >> movedTo;
 		}
 	}
-	*/
+	
 	cout << "Hello world!" << endl;
 	for (int i=0; i<8; i++) {
 		for(int j=0; j<8; j++) {
@@ -33,6 +34,7 @@ int main() {
 			//cout << "The location of the pieces: "<< ((char) i + 63) + j+1 << endl;
 		}
 	}
+	*/
 	b.printBoard();
-return 0;
+	return 0;
 }

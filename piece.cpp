@@ -5,6 +5,7 @@ using namespace std;
 
 Piece::Piece() {
 	ident = '*';
+	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = 0;
 }
@@ -17,6 +18,7 @@ Pawn::Pawn() {
 	ident = 'P';
 	isInit = true;
 	type = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = -1;
 }
@@ -28,6 +30,7 @@ Pawn::Pawn(bool side) {
 	int temp;
 	if(type) temp = -1;
 	else temp = 1;
+	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = temp;
 	
@@ -38,12 +41,15 @@ Rook::Rook() {
 	isInit = true;
 	type = 0;
 	int z = 0;
-	for(int x = 0; x < 8; x++) {
-		for(int y = 0; y < 8; y++) {
-			moveArr[z].first = x;
-			moveArr[z].second = y;
-			z++;
-		}
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
+	for(int x = -7; x < 8; x++) {
+		if(x == 0) x++;
+		moveArr[z].first = 0;
+		moveArr[z].second = x;
+		z++;
+		moveArr[z].first = x;
+		moveArr[z].second = 0;
+		z++;
 	}
 }
 
@@ -52,13 +58,16 @@ Rook::Rook(bool side) {
 	isInit = true;
 	type = 1;
 	int z = 0;
-	for(int x = 0; x < 7; x++) {
-		for(int y = 0; y < 7; y++) {
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
+	for(int x = -7; x < 8; x++) {
+			if(x == 0) x++;
+			moveArr[z].first = 0;
+			moveArr[z].second = x;
+			z++;
 			moveArr[z].first = x;
-			moveArr[z].second = y;
+			moveArr[z].second = 0;
 			z++;
 		}
-	}
 }
 
 Knight::Knight() {
@@ -66,6 +75,7 @@ Knight::Knight() {
 	isInit = true;
 	type = 0;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int y = -1; y < 2; y++) {
 		for(int x = -1; x < 2; x++) {
 			moveArr[z].first = 2 * x;
@@ -91,6 +101,7 @@ Knight::Knight(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int y = -1; y < 2; y++) {
 		for(int x = -1; x < 2; x++) {
 			moveArr[z].first = 2 * x;
@@ -116,6 +127,7 @@ Bishop::Bishop() {
 	isInit = true;
 	type = 0;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -132,6 +144,7 @@ Bishop::Bishop(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -148,6 +161,7 @@ King::King() {
 	isInit = true;
 	type = 0;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int x = -1; x < 2; x++) {
 		for(int y = -1; y < 2; y++) {
 			if(x == y && y == 0) y++;
@@ -163,6 +177,7 @@ King::King(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int x = -1; x < 2; x++) {
 		for(int y = -1; y < 2; y++) {
 			if(x == y && y == 0) y++;
@@ -178,6 +193,7 @@ Queen::Queen() {
 	isInit = true;
 	type = 0;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(56*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -187,12 +203,14 @@ Queen::Queen() {
 		moveArr[z].first = -x;
 		z++;
 	}
-	for(int x = 0; x < 7; x++) {
-		for(int y = 0; y < 7; y++) {
-			moveArr[z].first = x;
-			moveArr[z].second = y;
-			z++;
-		}
+	for(int x = -7; x < 8; x++) {
+		if(x == 0) x++;
+		moveArr[z].first = 0;
+		moveArr[z].second = x;
+		z++;
+		moveArr[z].first = x;
+		moveArr[z].second = 0;
+		z++;
 	}
 }
 
@@ -201,6 +219,7 @@ Queen::Queen(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
+	moveArr = (std::pair<int, int>*)std::malloc(56*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -210,11 +229,13 @@ Queen::Queen(bool side) {
 		moveArr[z].first = -x;
 		z++;
 	}
-	for(int x = 0; x < 7; x++) {
-		for(int y = 0; y < 7; y++) {
-			moveArr[z].first = x;
-			moveArr[z].second = y;
-			z++;
-		}
+	for(int x = -7; x < 8; x++) {
+		if(x == 0) x++;
+		moveArr[z].first = 0;
+		moveArr[z].second = x;
+		z++;
+		moveArr[z].first = x;
+		moveArr[z].second = 0;
+		z++;
 	}
 }
