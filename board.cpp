@@ -71,7 +71,16 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 	std::pair<int, int>* moves = board[x1][y1].move();
 	for(int x = 0; moves[x].first!= 0 && moves[x].second != 0; x++) {
 		if(moves[x].first + x1 == x2 && moves[x].second + y1 == y2) {
-			if(board[x1][y1].ident == 'P' && board[x2][y2].ident != '*') break; 
+			if(!(board[x2][y2].ident == '*' || board[x2][y2].type != board[x1][y1].type)) break;
+			else if(board[x1][y1].ident == 'P' && board[x2][y2].ident != '*') break; 
+			else if(board[x1][y1].ident == 'R' || (board[x1][y1].ident == 'Q' && (x1-x2 == 0 || y1-y2 == 0))) {
+				if(x1-x2 == 0) for(int z = min(y1, y2) + 1; z < max(y1, y2); z++) if(board[x1][z].ident != '*') break;
+				else if(y1-y2 == 0) for(int z = min(x1, x2) + 1; z < max(x1, x2); z++) if(board[x1][z].ident != '*') break;
+			}
+			else if(board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q' && (x1-x2 != 0 || y1-y2 != 0))) {
+				if((x1 < x2 && y1 < y2) || (x1 > x2 && y1 > y2)) (int z = min(x1, x2) + 1; z < max(x1, x2); z++) if(board[x1+z][y2+z].ident != '*') break;
+				else (int z = min(x1, x2) + 1; z < max(x1, x2); z++) if(board[x1-z][y2+z].ident != '*') break;
+			}
 			board[x2][y2] = board[x1][y1];
 			board[x1][y1] = Piece();
 			return true;
