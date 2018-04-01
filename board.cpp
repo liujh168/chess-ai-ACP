@@ -87,6 +87,36 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 			if(br) break;
 			board[x2][y2] = board[x1][y1];
 			board[x1][y1] = Piece();
+			if(board[x2][y2].ident == 'P' && ((y2 == 0 && board[x2][y2].type) || (y2 == 7 && board[x2][y2].type == false))) {
+				std::string input;
+				cout << "Pawn promotion! What type will it promote to?" << endl;
+				bool cont = true;
+				while(cont) {
+					cin >> input;
+					switch(input.at(0)) {
+						case 'Q':
+							board[x2][y2] = Queen(board[x2][y2].type);
+							cont = false;
+							break;
+						case 'R':
+							board[x2][y2] = Rook(board[x2][y2].type);
+							cont = false;
+							break;
+						case 'B':
+							board[x2][y2] = Bishop(board[x2][y2].type);
+							cont = false;
+							break;
+						case 'N':	
+						case 'K':
+							board[x2][y2] = Knight(board[x2][y2].type);
+							cont = false;
+							break;
+						default:
+							cout << "Invalid promotion type" << endl;
+							break;
+					}
+				}
+			}
 			return true;
 		}
 	}
