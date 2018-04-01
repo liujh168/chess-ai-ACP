@@ -78,7 +78,7 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 			else if(board[x1][y1].ident == 'P' && board[x2][y2].ident != '*') break; 
 			else if(board[x1][y1].ident == 'R' || ((board[x1][y1].ident == 'Q' && (x1-x2 == 0 || y1-y2 == 0)))) {
 				if(x1-x2 == 0) for(int z = min(y1, y2) + 1; z < max(y1, y2); z++) if(board[x1][z].ident != '*') { br = true; break; }
-				else if(y1-y2 == 0) for(int z = min(x1, x2) + 1; z < max(x1, x2); z++) if(board[z][y1].ident != '*') { br = true; break; }
+				if(y1-y2 == 0) for(int z = min(x1, x2) + 1; z < max(x1, x2); z++) if(board[z][y1].ident != '*') { br = true; break; }
 			}
 			else if(board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q' && (x1-x2 != 0 || y1-y2 != 0))) {
 				if((x1 < x2 && y1 < y2) || (x1 > x2 && y1 > y2)) for(int z = min(x1, x2) + 1; z < max(x1, x2); z++) if(board[x1+z][y2+z].ident != '*') { br = true; break; }

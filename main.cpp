@@ -28,7 +28,7 @@ int main() {
 			cout << x1 << " " << y1 << " " << x2 << " " << y2 << " " << endl;
 			mov = !b.movePiece(x1, y1, x2, y2);
 		}
-		//b.turn = !b.turn;
+		b.turn = !b.turn;
 		system("CLS");
 		b.printBoard();
 	}
