@@ -54,20 +54,21 @@ Board::Board(Player white, Player black) {
 }
 
 bool Board::movePiece(int x1, int y1, int x2, int y2) {
+	if(legalMove(x1, y1, x2, y2) {
+		board[x2][y2] = board[x1][y1];
+		board[x1][y1] = Piece();
+		return true;
+	}
+	return false;
+}
+
+bool legalMove(int x1, int y1, int x2, int y2) {
 	if(x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { std::cout << "Out of bounds" << std::endl; return false; }
 	if(!board[x1][y1].isInit) { std::cout << "Target Piece doesn't exist" << std::endl; return false; }
 	if(!(board[x1][y1].type == turn)) { std::cout << "Target piece is not yours" << std::endl; return false; }
 	if(board[x1][y1].ident == 'P') { //Special Pawn movement/attacking 
-		if(x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2-y1) == 2) {
-			board[x2][y2] = board[x1][y1]; 
-			board[x1][y1] = Piece();
-			return true;
-		}
-		if(abs(x1-x2) == 1 && abs(y1-y2) == 1 && board[x2][y2].ident != '*') {
-			board[x2][y2] = board[x1][y1]; 
-			board[x1][y1] = Piece();
-			return true;
-		}
+		if(x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2-y1) == 2) return true;
+		if(abs(x1-x2) == 1 && abs(y1-y2) == 1 && board[x2][y2].ident != '*') return true;
 	}
 	std::pair<int, int>* moves = board[x1][y1].move();
 	cout << moves[0].first << " " << moves[0].second << endl;
@@ -85,38 +86,6 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 				else for(int z = min(x1, x2) + 1; z < max(x1, x2); z++) if(board[x1-z][y2+z].ident != '*') { br = true; break; }
 			}
 			if(br) break;
-			board[x2][y2] = board[x1][y1];
-			board[x1][y1] = Piece();
-			if(board[x2][y2].ident == 'P' && ((y2 == 0 && board[x2][y2].type) || (y2 == 7 && board[x2][y2].type == false))) {
-				std::string input;
-				cout << "Pawn promotion! What type will it promote to?" << endl;
-				bool cont = true;
-				while(cont) {
-					cin >> input;
-					switch(input.at(0)) {
-						case 'Q':
-							board[x2][y2] = Queen(board[x2][y2].type);
-							cont = false;
-							break;
-						case 'R':
-							board[x2][y2] = Rook(board[x2][y2].type);
-							cont = false;
-							break;
-						case 'B':
-							board[x2][y2] = Bishop(board[x2][y2].type);
-							cont = false;
-							break;
-						case 'N':	
-						case 'K':
-							board[x2][y2] = Knight(board[x2][y2].type);
-							cont = false;
-							break;
-						default:
-							cout << "Invalid promotion type" << endl;
-							break;
-					}
-				}
-			}
 			return true;
 		}
 	}
@@ -131,4 +100,20 @@ void Board::printBoard() {
 		}
 		std::cout << endl;
 	}
+}
+bool isCheck(bool player) {
+	int x1;
+	int y1;
+	for(int i = 0; i<8; i++){
+		for(int j =0; j<8; j++) {
+			if(board[i][j].ident == 'K' && board[i][j].type == player) {
+				x1 = i;
+				y1 = j;
+				i = 8;
+				j = 8;
+			}
+		}
+	}
+	for(int i = 0; i < 8; i++) for(int j = 0; k < 8; j++) if(board[i][j].type != player) if(legalMove(i, j, x1, y1) return true;
+	return false;
 }

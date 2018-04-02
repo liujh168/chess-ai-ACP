@@ -10,9 +10,10 @@ int main() {
 	Board b;
 	string input;
 	bool playing = true;
+	bool checkm8 = false;
 	system("CLS");
 	b.printBoard();
-	while(playing) {
+	while(playing && !checkm8) {
 		bool mov = true;
 		while(mov) {
 			cout << "Please enter the location of the piece to be moved: ";
