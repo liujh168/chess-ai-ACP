@@ -21,8 +21,9 @@ int main() {
 			if(input.compare("quit") == 0) { playing = false; break; }
 			int x1 = input.at(0) - 65;
 			int y1 = input.at(1) - 49;
-			cout << endl << "Please enter where you would like to move the piece:" << endl;
+			cout << endl << "Please enter where you would like to move the piece:";
 			cin >> input;
+			cout << endl;
 			if(input.compare("quit") == 0) { playing = false; break; }
 			int x2 = input.at(0) - 65;
 			int y2 = input.at(1) - 49;
