@@ -132,7 +132,7 @@ bool Board::isCheck(bool player) {
 Piece Board::isCheck(int x1, int y1) {
 	for(int i = 0; i < 8; i++) {
 		for(int j = 0; j < 8; j++) {
-			if(board[i][j].type != player) if(legalMove(i, j, x1, y1)) {
+			if(board[i][j].type != turn) if(legalMove(i, j, x1, y1)) {
 				return board[i][j]; 
 			}
 		}
@@ -140,7 +140,7 @@ Piece Board::isCheck(int x1, int y1) {
 	return Piece();
 }
 
-bool Board::isCheckm8(bool player) {
+bool Board::isCheckmate(bool player) {
 	
 	int x1;
 	int y1;
@@ -158,7 +158,7 @@ bool Board::isCheckm8(bool player) {
 		if(x == 0 && y == 0) y++;
 		if(legalMove(x1, y1, x1+x, y1+y)) {
 			Piece temp = isCheck(x1+x, y1+y);
-			if(!Piece.isInit) return false;
+			if(!(temp.isInit)) return false;
 		}
 	}
 	
