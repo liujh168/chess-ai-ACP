@@ -54,7 +54,7 @@ Board::Board(Player white, Player black) {
 }
 
 bool Board::movePiece(int x1, int y1, int x2, int y2) {
-	if(legalMove(x1, y1, x2, y2) {
+	if(legalMove(x1, y1, x2, y2)) {
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
 		return true;
@@ -62,9 +62,9 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 	return false;
 }
 
-bool legalMove(int x1, int y1, int x2, int y2) {
+bool Board::legalMove(int x1, int y1, int x2, int y2) {
 	if(x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { std::cout << "Out of bounds" << std::endl; return false; }
-	if(!board[x1][y1].isInit) { std::cout << "Target Piece doesn't exist" << std::endl; return false; }
+	if(!(board[x1][y1].isInit)) { std::cout << "Target Piece doesn't exist" << std::endl; return false; }
 	if(!(board[x1][y1].type == turn)) { std::cout << "Target piece is not yours" << std::endl; return false; }
 	if(board[x1][y1].ident == 'P') { //Special Pawn movement/attacking 
 		if(x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2-y1) == 2) return true;
@@ -101,7 +101,7 @@ void Board::printBoard() {
 		std::cout << endl;
 	}
 }
-bool isCheck(bool player) {
+bool Board::isCheck(bool player) {
 	int x1;
 	int y1;
 	for(int i = 0; i<8; i++){
@@ -114,6 +114,12 @@ bool isCheck(bool player) {
 			}
 		}
 	}
-	for(int i = 0; i < 8; i++) for(int j = 0; k < 8; j++) if(board[i][j].type != player) if(legalMove(i, j, x1, y1) return true;
+	for(int i = 0; i < 8; i++) {
+		for(int j = 0; j < 8; j++) {
+			if(board[i][j].type != player) if(legalMove(i, j, x1, y1)) {
+				return true;
+			}
+		}
+	}
 	return false;
 }
