@@ -103,6 +103,8 @@ void Board::printBoard() {
 	}
 	std::cout << " |A B C D E F G H" << endl;
 }
+
+
 bool Board::isCheck(bool player) {
 	int x1;
 	int y1;
@@ -124,4 +126,44 @@ bool Board::isCheck(bool player) {
 		}
 	}
 	return false;
+}
+
+
+Piece Board::isCheck(int x1, int y1) {
+	for(int i = 0; i < 8; i++) {
+		for(int j = 0; j < 8; j++) {
+			if(board[i][j].type != player) if(legalMove(i, j, x1, y1)) {
+				return board[i][j]; 
+			}
+		}
+	}
+	return Piece();
+}
+
+bool Board::isCheckm8(bool player) {
+	
+	int x1;
+	int y1;
+		for(int i = 0; i<8; i++){
+		for(int j =0; j<8; j++) {
+			if(board[i][j].ident == 'K' && board[i][j].type == player) {
+				x1 = i;
+				y1 = j;
+				i = 8;
+				j = 8;
+			}
+		}
+	}
+	if(isCheck(player)) for(int x = -1; x < 2; x++) for(int y = -1; y < 2; y++) {
+		if(x == 0 && y == 0) y++;
+		if(legalMove(x1, y1, x1+x, y1+y)) {
+			Piece temp = isCheck(x1+x, y1+y);
+			if(!Piece.isInit) return false;
+		}
+	}
+	
+	
+	
+	
+	
 }
