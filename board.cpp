@@ -82,17 +82,45 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 				if (y1 - y2 == 0) for (int z = min(x1, x2) + 1; z < max(x1, x2); z++) if (board[z][y1].ident != '*') { br = true; break; }
 			}
 			else if (board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q' && (x1 - x2 != 0 || y1 - y2 != 0))) {
-				if ((x1 < x2 && y1 < y2) || (x1 > x2 && y1 > y2)) {
-					for (int z = min(x1, x2) + 1; z < max(x1, x2); z++)
-						if (board[z][z].ident != '*')
-						{
-							br = true; break;
+				if (x1 < x2&&y1 < y2) {
+					for (int x = 1; x < x2 - x1; x++) {
+						if (board[x1 + x][y1 + x].ident != '*') {
+							br = true;
+							break;
 						}
-				}
-				else for (int z = 1; z < max(x1,x2) - min(x1, x2); z++)
-					if (board[x1+z][y1-z].ident != '*') {
-						br = true; break;
 					}
+				}
+				else
+					if (x1<x2&&y1>y2) {
+						for (int x = 1; x < x2 - x1; x++) {
+							if (board[x1 + x][y1 - x].ident != '*') {
+								br = true;
+								break;
+							}
+						}
+					}
+					else
+						if (x1 > x2&&y1 < y2) {
+							for (int x = 1; x < x1 - x2; x++) {
+								if (board[x1 - x][y1 + x].ident != '*') {
+									br = true;
+									break;
+								}
+							}
+						}
+						else
+							if (x1 > x2&&y1 > y2) {
+								for (int x = 1; x < x1 - x2; x++) {
+									if (board[x1 - x][y1 - x].ident != '*') {
+										br = true;
+										break;
+									}
+								}
+							}
+							else {
+								br = true;
+								break;
+							}
 			}
 			if (br) break;
 			return true;
@@ -170,9 +198,5 @@ bool Board::isCheckmate(bool player) {
 			if (!(temp.isInit)) return false;
 		}
 	}
-
-
-
-
 
 }
