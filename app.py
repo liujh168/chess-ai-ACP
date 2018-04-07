@@ -1,6 +1,6 @@
 import tkinter as tk
 
-import subprocess
+import subprocess, copy
 
 class Tile(tk.Button):
     def __init__(self, master):
@@ -21,17 +21,19 @@ class Tile(tk.Button):
     def out(self):
         self.master.place_toggle = not self.master.place_toggle
         if self.master.piece_to_move != None:
-            temp = self.master.piece_to_move
+            temp = [copy.deepcopy(self.master.piece_to_move['text']), copy.deepcopy(self.master.piece_to_move.row), copy.deepcopy(self.master.piece_to_move.col)]
             
-            self.master.cell_array[temp.row][temp.col] = self
-            self.set_attr(temp.color, temp.row, temp.col)
-            temp.set_attr(self.color, self.row, self.col)
-            
-            self.cell_array[self.row][self.col] = temp
+            self.master.piece_to_move['text'] = self['text']
+            self.master.piece_to_move.row = self.row
+            self.master.piece_to_move.col = self.col
 
-            self.piece_to_move = None
+            self['text'] = temp[0]
+            self.row = temp[1]
+            self.col = temp[2]
+
+            self.master.piece_to_move = None
         else:
-            self.piece_to_move = self
+            self.master.piece_to_move = self
 
 
         print(self.row, ", ", self.col, ", ", self.color)
@@ -51,10 +53,11 @@ class App(tk.Tk):
             for j in range(8):
                 if j % 2 != 0:
                     self.cell_array[i][j].set_attr(True, i , j) if row_color else self.cell_array[i][j].set_attr(False, i, j)
+                    self.cell_array[i][j].configure(text=i*8+j, fg="red")
                     
                 else:
                     self.cell_array[i][j].set_attr(False, i, j) if row_color else self.cell_array[i][j].set_attr(True, i, j)
-                    
+                    self.cell_array[i][j].configure(text=i*8+j, fg="red")
             row_color = not row_color
 
     def __str__(self):
@@ -66,6 +69,9 @@ class App(tk.Tk):
             output += "\n"
 
         return output
+
+    def set_board(self):
+        pass
 
 
 
