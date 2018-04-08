@@ -20,6 +20,7 @@ class Tile(tk.Button):
 
     def out(self):
         self.master.place_toggle = not self.master.place_toggle
+        
         if self.master.piece_to_move != None:
             temp = [copy.deepcopy(self.master.piece_to_move['text']), copy.deepcopy(self.master.piece_to_move.row), copy.deepcopy(self.master.piece_to_move.col)]
             
@@ -76,6 +77,8 @@ class App(tk.Tk):
 
 
 if __name__ == '__main__':
+    #os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    #os.system("g++ gui_main.cpp")
     a = App()
     #a.play()
     a.mainloop(n=0)

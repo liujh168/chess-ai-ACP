@@ -132,13 +132,13 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 
 void Board::printBoard() {
 	for (int x = 0; x < 8; x++) {
-		std::cout << 8 - x << '|';
+		//std::cout << 8 - x << '|';
 		for (int y = 0; y < 8; y++) {
 			std::cout << board[y][7 - x].ident << ' ';
 		}
 		std::cout << endl;
 	}
-	std::cout << " |A B C D E F G H" << endl;
+	//std::cout << " |A B C D E F G H" << endl;
 }
 
 
