@@ -1,6 +1,6 @@
 import tkinter as tk
 
-import subprocess, copy
+import subprocess, os, copy
 
 class Tile(tk.Button):
     def __init__(self, master):
