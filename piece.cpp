@@ -15,6 +15,7 @@ std::pair<int, int>* Piece::move() {
 }
 
 Pawn::Pawn() {
+	weight = 1;
 	ident = 'P';
 	isInit = true;
 	type = 0;
@@ -24,6 +25,7 @@ Pawn::Pawn() {
 }
 
 Pawn::Pawn(bool side) {
+	weight = 1;
 	ident = 'P';
 	isInit = true;
 	type = side;
@@ -37,6 +39,7 @@ Pawn::Pawn(bool side) {
 }
 
 Rook::Rook() {
+	weight = 5;
 	ident = 'R';
 	isInit = true;
 	type = 0;
@@ -54,6 +57,7 @@ Rook::Rook() {
 }
 
 Rook::Rook(bool side) {
+	weight = 5;
 	ident = 'R';
 	isInit = true;
 	type = side;
@@ -71,6 +75,7 @@ Rook::Rook(bool side) {
 }
 
 Knight::Knight() {
+	weight = 3;
 	ident = 'N';
 	isInit = true;
 	type = 0;
@@ -97,6 +102,7 @@ Knight::Knight() {
 }
 
 Knight::Knight(bool side) {
+	weight = 3;
 	ident = 'N';
 	isInit = true;
 	type = side;
@@ -123,6 +129,7 @@ Knight::Knight(bool side) {
 }
 
 Bishop::Bishop() {
+	weight = 3;
 	ident = 'B';
 	isInit = true;
 	type = 0;
@@ -140,6 +147,7 @@ Bishop::Bishop() {
 }
 
 Bishop::Bishop(bool side) {
+	weight = 3;
 	ident = 'B';
 	isInit = true;
 	type = side;
@@ -189,6 +197,7 @@ King::King(bool side) {
 }
 
 Queen::Queen() {
+	weight = 9;
 	ident = 'Q';
 	isInit = true;
 	type = 0;
@@ -215,6 +224,7 @@ Queen::Queen() {
 }
 
 Queen::Queen(bool side) {
+	weight = 9;
 	ident = 'Q';
 	isInit = true;
 	type = side;

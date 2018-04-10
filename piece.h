@@ -5,6 +5,7 @@
 
 class Piece {
 	public:
+		int weight;
 		std::pair<int, int>* moveArr;
 		char ident;
 		bool type; //0 = white, 1 = black
