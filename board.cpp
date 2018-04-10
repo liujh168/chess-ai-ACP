@@ -83,7 +83,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 			}
 			else if (board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q' && (x1 - x2 != 0 || y1 - y2 != 0))) {
 				if (x1 < x2&&y1 < y2) {
-					for (int x = 1; x < x2 - x1; x++) {
+					for (int x = 1; x < abs(x2 - x1); x++) {
 						if (board[x1 + x][y1 + x].ident != '*') {
 							br = true;
 							break;
@@ -91,8 +91,8 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 					}
 				}
 				else
-					if (x1<x2&&y1>y2) {
-						for (int x = 1; x < x2 - x1; x++) {
+					if (x1 < x2&& y	1 > y2) {
+						for (int x = 1; x < abs(x2 - x1); x++) {
 							if (board[x1 + x][y1 - x].ident != '*') {
 								br = true;
 								break;
@@ -101,7 +101,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 					}
 					else
 						if (x1 > x2&&y1 < y2) {
-							for (int x = 1; x < x1 - x2; x++) {
+							for (int x = 1; x < abs(x2 - x1); x++) {
 								if (board[x1 - x][y1 + x].ident != '*') {
 									br = true;
 									break;
@@ -110,7 +110,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 						}
 						else
 							if (x1 > x2&&y1 > y2) {
-								for (int x = 1; x < x1 - x2; x++) {
+								for (int x = 1; x < abs(x2 - x1); x++) {
 									if (board[x1 - x][y1 - x].ident != '*') {
 										br = true;
 										break;
