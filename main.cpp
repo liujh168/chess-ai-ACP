@@ -8,6 +8,7 @@ using namespace std;
 
 int main() {
 	Board b;
+	cout << "test";
 	string input;
 	bool playing = true;
 	bool checkm8 = false;

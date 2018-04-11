@@ -21,16 +21,11 @@ class Tile(tk.Button):
     def out(self):
         self.master.place_toggle = not self.master.place_toggle
         
-        if self.master.piece_to_move != None:
-            temp = [copy.deepcopy(self.master.piece_to_move['text']), copy.deepcopy(self.master.piece_to_move.row), copy.deepcopy(self.master.piece_to_move.col)]
-            
-            self.master.piece_to_move['text'] = self['text']
-            self.master.piece_to_move.row = self.row
-            self.master.piece_to_move.col = self.col
+        if (self.master.piece_to_move != None) and self.isLegal():
+            temp = copy.deepcopy(self.master.piece_to_move['text'])
 
-            self['text'] = temp[0]
-            self.row = temp[1]
-            self.col = temp[2]
+            self.master.piece_to_move['text'] = self['text']
+            self['text'] = temp
 
             self.master.piece_to_move = None
         else:
@@ -38,10 +33,22 @@ class Tile(tk.Button):
 
 
         print(self.row, ", ", self.col, ", ", self.color)
+    
+    def isLegal(self):
+        x1 = self.master.piece_to_move.col
+        y1 = self.master.piece_to_move.row
+        x2 = self.col
+        y2 = self.row
+
+        so, se = proc.communicate()
+
+        print(str(so))
 
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
+
+        self.proc = subprocess.Popen("a ", shell=True)
 
         self.place_toggle = False
         self.piece_to_move = None
@@ -77,8 +84,8 @@ class App(tk.Tk):
 
 
 if __name__ == '__main__':
-    #os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    #os.system("g++ gui_main.cpp")
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    #os.system("g++ main.cpp")
     a = App()
     #a.play()
     a.mainloop(n=0)

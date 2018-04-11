@@ -1,13 +1,12 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
+            "label": "run testcpp",
             "type": "shell",
-            "command": "python app.py",
+            "command": "python",
             "args": [
+                "app.py"
             ],
             "group": {
                 "kind": "build",
@@ -15,5 +14,22 @@
             },
             "problemMatcher": []
         },
+        {
+            "label": "run testcpp",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "main.cpp",
+                "board.cpp",
+                "player.cpp",
+                "ai.cpp",
+                "piece.cpp"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
     ]
 }

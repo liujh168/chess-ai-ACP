@@ -91,7 +91,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 					}
 				}
 				else
-					if (x1 < x2&& y	1 > y2) {
+					if (x1 < x2&& y1 > y2) {
 						for (int x = 1; x < abs(x2 - x1); x++) {
 							if (board[x1 + x][y1 - x].ident != '*') {
 								br = true;
