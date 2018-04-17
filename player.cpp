@@ -8,7 +8,6 @@ Player::Player() {
 	isAi = false;
 }
 
-Player::Player(Ai ai) {
-	isAi = true;
-	this->ai = ai;
+Player::Player(bool ai) {
+	isAi = ai;
 }

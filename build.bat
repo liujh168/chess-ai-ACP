@@ -1,2 +1,3 @@
-g++ main.cpp board.cpp piece.cpp player.cpp ai.cpp
+g++ main.cpp board.cpp piece.cpp player.cpp
+pause
 a.exe

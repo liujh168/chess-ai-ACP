@@ -2,6 +2,7 @@
 #include <math.h>
 #include <algorithm>
 #include "board.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -199,4 +200,16 @@ bool Board::isCheckmate(bool player) {
 		}
 	}
 
+}
+
+void Board::makeMove() {
+	int x = rand() % 8;
+	int y = rand() % 8;
+	
+	if(board[x][y].type == turn) {
+		std::pair<int, int>* legal = board[x][y].moveArr;
+		int a = rand() % sizeof(legal);
+	if (legalMove(x, y, legal[a].first+x, legal[a].second + y)) movePiece(x, y, legal[a].first+x, legal[a].second + y);
+		
+	}
 }

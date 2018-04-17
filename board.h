@@ -2,7 +2,6 @@
 #define BOARD_H
 
 #include "player.h"
-#include "ai.h"
 #include "piece.h"
 
 class Board {
@@ -22,6 +21,7 @@ class Board {
 		Piece isCheck(int x1, int y1);
 		bool isCheckmate(bool player);
 		bool legalMove(int x1, int y1, int x2, int y2);
+		void makeMove();
 };
 
 #endif /* BOARD_H */
