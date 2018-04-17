@@ -21,7 +21,7 @@ class Board {
 		Piece isCheck(int x1, int y1);
 		bool isCheckmate(bool player);
 		bool legalMove(int x1, int y1, int x2, int y2);
-		void makeMove();
+		bool makeMove();
 };
 
 #endif /* BOARD_H */
