@@ -22,6 +22,7 @@ class Board {
 		bool isCheckmate(bool player);
 		bool legalMove(int x1, int y1, int x2, int y2);
 		bool makeMove();
+		void promotion(int f, int g);
 };
 
 #endif /* BOARD_H */

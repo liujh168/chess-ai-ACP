@@ -219,3 +219,20 @@ bool Board::makeMove() {
 	
 	return false;
 }
+
+void Board::promotion(int f, int g) {
+	char input;
+	if((!turn && !white.isAi) || (turn && !black.isAi)) {
+	cout << "Please enter type to which the pawn will be promoted: " << endl;
+	cin >> input;
+	if (input == 'Q') {
+		board[f][g] = Queen(board[f][g].type);
+	}
+	else if (input == 'N') {
+		board[f][g] = Knight(board[f][g].type);
+	}
+	else {
+		board[f][g] = Queen(board[f][g].type);
+	}
+}
+}
