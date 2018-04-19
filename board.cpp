@@ -134,7 +134,13 @@ void Board::printBoard() {
 	for (int x = 0; x < 8; x++) {
 		std::cout << 8 - x << '|';
 		for (int y = 0; y < 8; y++) {
-			std::cout << board[y][7 - x].ident << ' ';
+			if(board[y][7-x].ident == '*') { //blank
+				std::cout << "  ";
+			} else if(board[y][7-x].type) { //piece is black
+				std::cout << "\033[1;31m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
+			} else if(board[y][7-x].type == false) { //white
+				std::cout << "\033[1;33m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
+			}
 		}
 		std::cout << endl;
 	}
@@ -219,4 +225,21 @@ bool Board::makeMove() {
 	}
 	
 	return false;
+}
+
+void Board::promotion(int f, int g) {
+	char input;
+	if((!turn && !white.isAi) || (turn && !black.isAi)) {
+	cout << "Please enter type to which the pawn will be promoted: " << endl;
+	cin >> input;
+	if (input == 'Q') {
+		board[f][g] = Queen(board[f][g].type);
+	}
+	else if (input == 'N') {
+		board[f][g] = Knight(board[f][g].type);
+	}
+	else {
+		board[f][g] = Queen(board[f][g].type);
+	}
+}
 }
