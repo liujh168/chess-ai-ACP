@@ -9,6 +9,7 @@ Piece::Piece() {
 	moveArr[0].first = 0;
 	moveArr[0].second = 0;
 	lm = 1;
+	hasSp = false;
 }
 
 std::pair<int, int>* Piece::move() {
@@ -23,7 +24,16 @@ Pawn::Pawn() {
 	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = -1;
+	spMoveArr = (std::pair<int, int>*)std::malloc(3*sizeof spMoveArr);
+	spMoveArr[0].first = -1;
+	spMoveArr[0].second = -1;
+	spMoveArr[1].first = 1;
+	spMoveArr[1].second = -1;
+	spMoveArr[2].first = 0;
+	spMoveArr[2].second = -2;
 	lm = 1;
+	sp = 3;
+	hasSp = true;
 }
 
 Pawn::Pawn(bool side) {
@@ -37,7 +47,16 @@ Pawn::Pawn(bool side) {
 	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = temp;
+	spMoveArr = (std::pair<int, int>*)std::malloc(3*sizeof spMoveArr);
+	spMoveArr[0].first = -1;
+	spMoveArr[0].second = temp;
+	spMoveArr[1].first = 1;
+	spMoveArr[1].second = temp;
+	spMoveArr[2].first = 0;
+	spMoveArr[2].second = temp*2;
 	lm = 1;
+	sp = 3;
+	hasSp = true;
 }
 
 Rook::Rook() {
@@ -57,6 +76,7 @@ Rook::Rook() {
 		z++;
 	}
 	lm = 28;
+	hasSp = false;
 }
 
 Rook::Rook(bool side) {
@@ -76,6 +96,7 @@ Rook::Rook(bool side) {
 			z++;
 		}
 	lm = 28;
+	hasSp = false;
 }
 
 Knight::Knight() {
@@ -104,6 +125,7 @@ Knight::Knight() {
 		y++;
 	}
 	lm = 8;
+	hasSp = false;
 }
 
 Knight::Knight(bool side) {
@@ -132,6 +154,7 @@ Knight::Knight(bool side) {
 		y++;
 	}
 	lm = 8;
+	hasSp = false;
 }
 
 Bishop::Bishop() {
@@ -151,6 +174,7 @@ Bishop::Bishop() {
 		z++;
 	}
 	lm = 28;
+	hasSp = false;
 }
 
 Bishop::Bishop(bool side) {
@@ -170,6 +194,7 @@ Bishop::Bishop(bool side) {
 		z++;
 	}
 	lm = 28;
+	hasSp = false;
 }
 
 King::King() {
@@ -187,6 +212,7 @@ King::King() {
 		}
 	}
 	lm = 8;
+	hasSp = false;
 }
 
 King::King(bool side) {
@@ -204,6 +230,7 @@ King::King(bool side) {
 		}
 	}
 	lm = 8;
+	hasSp = false;
 }
 
 Queen::Queen() {
@@ -232,6 +259,7 @@ Queen::Queen() {
 		z++;
 	}
 	lm = 56;
+	hasSp = false;
 }
 
 Queen::Queen(bool side) {
@@ -260,4 +288,5 @@ Queen::Queen(bool side) {
 		z++;
 	}
 	lm = 56;
+	hasSp = false;
 }
