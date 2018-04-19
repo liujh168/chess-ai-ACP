@@ -72,7 +72,6 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1 && board[x2][y2].ident != '*') return true;
 	}
 	std::pair<int, int>* moves = board[x1][y1].move();
-	cout << moves[0].first << " " << moves[0].second << endl;
 	for (int x = 0; moves[x].first != 0 || moves[x].second != 0; x++) {
 		if (moves[x].first + x1 == x2 && moves[x].second + y1 == y2) {
 			bool br = false;
@@ -208,12 +207,8 @@ bool Board::makeMove() {
 	
 	if(board[x][y].type == turn) {
 		std::pair<int, int>* legal = board[x][y].moveArr;
-		int a = rand() % sizeof(legal);
-	if (legalMove(x, y, legal[a].first+x, legal[a].second + y)) {
-		movePiece(x, y, legal[a].first+x, legal[a].second + y);
-		return true;
-	}
-		
+		int a = rand() % board[x][y].lm;
+		return movePiece(x, y, legal[a].first+x, legal[a].second + y);
 	}
 	
 	return false;

@@ -3,11 +3,12 @@
 #include "board.h"
 #include "piece.h"
 #include <string>
+#include <unistd.h>
 
 using namespace std;
 
 int main() {
-	Board b;
+	Board b(Player(true), Player(true));
 	cout << "test";
 	string input;
 	bool playing = true;
@@ -17,7 +18,7 @@ int main() {
 	while(playing && !checkm8) {
 		bool mov = true;
 		while(mov) {
-			if(!b.turn) {
+			if((!b.turn && !b.white.isAi) || (b.turn && !b.black.isAi)) {
 				cout << "Please enter the location of the piece to be moved: ";
 				cin >> input;
 				if(input.compare("quit") == 0) { playing = false; break; }
@@ -33,12 +34,12 @@ int main() {
 				mov = !b.movePiece(x1, y1, x2, y2);
 			}
 			else {
-				bool t = true;
-				while(t) { t = !b.makeMove(); }
+				while(!b.makeMove()) {}
+				mov = false;
 			}
 		}
 		b.turn = !b.turn;
-		
+		sleep(.75);
 		system("CLS");
 		b.printBoard();
 	}

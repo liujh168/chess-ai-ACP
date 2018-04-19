@@ -8,6 +8,7 @@ Piece::Piece() {
 	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = 0;
+	lm = 1;
 }
 
 std::pair<int, int>* Piece::move() {
@@ -22,6 +23,7 @@ Pawn::Pawn() {
 	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = -1;
+	lm = 1;
 }
 
 Pawn::Pawn(bool side) {
@@ -35,7 +37,7 @@ Pawn::Pawn(bool side) {
 	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = temp;
-	
+	lm = 1;
 }
 
 Rook::Rook() {
@@ -54,6 +56,7 @@ Rook::Rook() {
 		moveArr[z].second = 0;
 		z++;
 	}
+	lm = 28;
 }
 
 Rook::Rook(bool side) {
@@ -72,6 +75,7 @@ Rook::Rook(bool side) {
 			moveArr[z].second = 0;
 			z++;
 		}
+	lm = 28;
 }
 
 Knight::Knight() {
@@ -99,6 +103,7 @@ Knight::Knight() {
 		}
 		y++;
 	}
+	lm = 8;
 }
 
 Knight::Knight(bool side) {
@@ -126,6 +131,7 @@ Knight::Knight(bool side) {
 		}
 		y++;
 	}
+	lm = 8;
 }
 
 Bishop::Bishop() {
@@ -144,6 +150,7 @@ Bishop::Bishop() {
 		moveArr[z].first = -x;
 		z++;
 	}
+	lm = 28;
 }
 
 Bishop::Bishop(bool side) {
@@ -162,6 +169,7 @@ Bishop::Bishop(bool side) {
 		moveArr[z].first = -x;
 		z++;
 	}
+	lm = 28;
 }
 
 King::King() {
@@ -178,6 +186,7 @@ King::King() {
 			z++;
 		}
 	}
+	lm = 8;
 }
 
 King::King(bool side) {
@@ -194,6 +203,7 @@ King::King(bool side) {
 			z++;
 		}
 	}
+	lm = 8;
 }
 
 Queen::Queen() {
@@ -221,6 +231,7 @@ Queen::Queen() {
 		moveArr[z].second = 0;
 		z++;
 	}
+	lm = 56;
 }
 
 Queen::Queen(bool side) {
@@ -248,4 +259,5 @@ Queen::Queen(bool side) {
 		moveArr[z].second = 0;
 		z++;
 	}
+	lm = 56;
 }

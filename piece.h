@@ -5,6 +5,7 @@
 
 class Piece {
 	public:
+		int lm;
 		int weight;
 		std::pair<int, int>* moveArr;
 		char ident;
