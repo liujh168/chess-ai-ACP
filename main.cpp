@@ -39,9 +39,11 @@ int main() {
 			}
 		}
 		b.turn = !b.turn;
+		checkm8 = b.isCheckmate(b.turn);
 		sleep(.75);
 		system("CLS");
 		b.printBoard();
 	}
+	cout << "Checkmate!" << endl;
 	return 0;
 }

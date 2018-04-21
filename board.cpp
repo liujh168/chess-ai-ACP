@@ -64,9 +64,9 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 }
 
 bool Board::legalMove(int x1, int y1, int x2, int y2) {
-	if (x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { std::cout << "Out of bounds" << std::endl; return false; }
-	if (!(board[x1][y1].isInit)) { std::cout << "Target Piece doesn't exist" << std::endl; return false; }
-	if (!(board[x1][y1].type == turn)) { std::cout << "Target piece is not yours" << std::endl; return false; }
+	if (x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { if((!turn && !white.isAi) || (turn && !black.isAi))std::cout << "Out of bounds" << std::endl; return false; }
+	if (!(board[x1][y1].isInit)) { if((!turn && !white.isAi) || (turn && !black.isAi)) std::cout << "Target Piece doesn't exist" << std::endl; return false; }
+	if(ti) if (!(board[x1][y1].type == turn)) { std::cout << "Target piece is not yours" << std::endl; return false; }
 	if (board[x1][y1].ident == 'P') { //Special Pawn movement/attacking 
 		if (x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2 - y1) == 2) return true;
 		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1 && board[x2][y2].ident != '*') return true;
@@ -81,7 +81,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 				if (x1 - x2 == 0) for (int z = min(y1, y2) + 1; z < max(y1, y2); z++) if (board[x1][z].ident != '*') { br = true; break; }
 				if (y1 - y2 == 0) for (int z = min(x1, x2) + 1; z < max(x1, x2); z++) if (board[z][y1].ident != '*') { br = true; break; }
 			}
-			else if (board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q' && (x1 - x2 != 0 || y1 - y2 != 0))) {
+			else if (board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q' && (x1 - x2 != 0 || y1 - y2 != 0))) { //Queens and Bishops
 				if (x1 < x2&&y1 < y2) {
 					for (int x = 1; x < abs(x2 - x1); x++) {
 						if (board[x1 + x][y1 + x].ident != '*') {
@@ -90,43 +90,40 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 						}
 					}
 				}
-				else 
-					if (x1 < x2&& y1 > y2) {
-						for (int x = 1; x < abs(x2 - x1); x++) {
-							if (board[x1 + x][y1 - x].ident != '*') {
-								br = true;
-								break;
-							}
+				else if (x1 < x2&& y1 > y2) {
+					for (int x = 1; x < abs(x2 - x1); x++) {
+						if (board[x1 + x][y1 - x].ident != '*') {
+							br = true;
+							break;
 						}
 					}
-					else
-						if (x1 > x2&&y1 < y2) {
-							for (int x = 1; x < abs(x2 - x1); x++) {
-								if (board[x1 - x][y1 + x].ident != '*') {
-									br = true;
-									break;
-								}
-							}
+				}
+				else if (x1 > x2&&y1 < y2) {
+					for (int x = 1; x < abs(x2 - x1); x++) {
+						if (board[x1 - x][y1 + x].ident != '*') {
+							br = true;
+							break;
 						}
-						else
-							if (x1 > x2&&y1 > y2) {
-								for (int x = 1; x < abs(x2 - x1); x++) {
-									if (board[x1 - x][y1 - x].ident != '*') {
-										br = true;
-										break;
-									}
-								}
-							}
-							else {
-								br = true;
-								break;
-							}
+					}
+				}
+				else if (x1 > x2&&y1 > y2) {
+					for (int x = 1; x < abs(x2 - x1); x++) {
+						if (board[x1 - x][y1 - x].ident != '*') {
+							br = true;
+							break;
+						}
+					}
+				}
+				else {
+					br = true;
+					break;
+				}
 			}
 			if (br) break;
 			return true;
 		}
 	}
-	std::cout << "Illegal move" << endl;
+	if((!turn && !white.isAi) || (turn && !black.isAi)) std::cout << "Illegal move" << endl;
 	return false;
 }
 
@@ -172,21 +169,23 @@ bool Board::isCheck(bool player) {
 }
 
 
-Piece Board::isCheck(int x1, int y1) {
+bool Board::isCheck(int x1, int y1, bool player) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if (board[i][j].type != turn) if (legalMove(i, j, x1, y1)) {
-				return board[i][j];
+			if (board[i][j].type != player) if (legalMove(i, j, x1, y1)) {
+				cout << i << " " << j << " " << x1 << " " << y1 << endl;
+				return true;
 			}
 		}
 	}
-	return Piece();
+	return false;
 }
 
 bool Board::isCheckmate(bool player) {
-
+	ti = false;
 	int x1;
 	int y1;
+	if(!isCheck(player)) {  ti = true; return false; }
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			if (board[i][j].ident == 'K' && board[i][j].type == player) {
@@ -197,14 +196,19 @@ bool Board::isCheckmate(bool player) {
 			}
 		}
 	}
-	if (isCheck(player)) for (int x = -1; x < 2; x++) for (int y = -1; y < 2; y++) {
-		if (x == 0 && y == 0) y++;
+	bool pm = false;
+	for (int x = -1; x < 2; x++) for (int y = -1; y < 2; y++) {
+		if (x == 0 && y == 0) continue;
 		if (legalMove(x1, y1, x1 + x, y1 + y)) {
-			Piece temp = isCheck(x1 + x, y1 + y);
-			if (!(temp.isInit)) return false;
+			pm = true;
+			if (!isCheck(x1 + x, y1 + y, player)) {
+				ti = true;
+				return false;
+			}
 		}
 	}
-
+	ti = true;
+	return !pm;
 }
 
 bool Board::makeMove() {

@@ -7,8 +7,9 @@
 class Board {
 	private:
 		Piece board[8][8];
+		bool ti = false;
 	public:
-	Player white;
+		Player white;
 		Player black;
 		bool turn; //0 - White, 1 black
 		Board(); //Default constructor, white is human and black is AI
@@ -18,7 +19,7 @@ class Board {
 		bool blackCheckmate(); //Checks whether or not black is in checkmate; will be checked after each move
 		void printBoard(); //Prints out the current state of the board
 		bool isCheck(bool player); //tests for checkage
-		Piece isCheck(int x1, int y1);
+		bool isCheck(int x1, int y1, bool player);
 		bool isCheckmate(bool player);
 		bool legalMove(int x1, int y1, int x2, int y2);
 		bool makeMove();
