@@ -8,7 +8,7 @@
 using namespace std;
 
 int main() {
-	Board b(Player(true), Player(true));
+	Board b(Player(false), Player(true));
 	cout << "test";
 	string input;
 	bool playing = true;
@@ -32,15 +32,16 @@ int main() {
 				int y2 = input.at(1) - 49;
 				cout << x1 << " " << y1 << " " << x2 << " " << y2 << " " << endl;
 				mov = !b.movePiece(x1, y1, x2, y2);
+				 b.promotion(x2, y2);
 			}
 			else {
 				while(!b.makeMove()) {}
 				mov = false;
 			}
 		}
-		b.turn = !b.turn;
+		//b.turn = !b.turn;
 		checkm8 = b.isCheckmate(b.turn);
-		sleep(.75);
+		sleep(1.25);
 		system("CLS");
 		b.printBoard();
 	}
