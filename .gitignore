@@ -1,2 +1,7 @@
 a.exe
 *.h.gch
+.vs/slnx.sqlite
+.vs/chess-ai-ACP/v15/Browse.VC.db
+.vs/chess-ai-ACP/v15/Browse.VC.opendb
+
+.vs
