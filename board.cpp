@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "board.h"
 #include <stdlib.h>
+#include "weight.cpp"
 
 using namespace std;
 
@@ -64,9 +65,9 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 }
 
 bool Board::legalMove(int x1, int y1, int x2, int y2) {
-	if (x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { if((!turn && !white.isAi) || (turn && !black.isAi))std::cout << "Out of bounds" << std::endl; return false; }
-	if (!(board[x1][y1].isInit)) { if((!turn && !white.isAi) || (turn && !black.isAi)) std::cout << "Target Piece doesn't exist" << std::endl; return false; }
-	if(ti) if (!(board[x1][y1].type == turn)) { std::cout << "Target piece is not yours" << std::endl; return false; }
+	if (x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { if ((!turn && !white.isAi) || (turn && !black.isAi))std::cout << "Out of bounds" << std::endl; return false; }
+	if (!(board[x1][y1].isInit)) { if ((!turn && !white.isAi) || (turn && !black.isAi)) std::cout << "Target Piece doesn't exist" << std::endl; return false; }
+	if (ti) if (!(board[x1][y1].type == turn)) { std::cout << "Target piece is not yours" << std::endl; return false; }
 	if (board[x1][y1].ident == 'P') { //Special Pawn movement/attacking 
 		if (x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2 - y1) == 2) return true;
 		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1 && board[x2][y2].ident != '*') return true;
@@ -123,7 +124,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 			return true;
 		}
 	}
-	if((!turn && !white.isAi) || (turn && !black.isAi)) std::cout << "Illegal move" << endl;
+	if ((!turn && !white.isAi) || (turn && !black.isAi)) std::cout << "Illegal move" << endl;
 	return false;
 }
 
@@ -131,11 +132,13 @@ void Board::printBoard() {
 	for (int x = 0; x < 8; x++) {
 		std::cout << 8 - x << '|';
 		for (int y = 0; y < 8; y++) {
-			if(board[y][7-x].ident == '*') { //blank
+			if (board[y][7 - x].ident == '*') { //blank
 				std::cout << "  ";
-			} else if(board[y][7-x].type) { //piece is black
+			}
+			else if (board[y][7 - x].type) { //piece is black
 				std::cout << "\033[1;31m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
-			} else if(board[y][7-x].type == false) { //white
+			}
+			else if (board[y][7 - x].type == false) { //white
 				std::cout << "\033[1;33m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
 			}
 		}
@@ -185,7 +188,7 @@ bool Board::isCheckmate(bool player) {
 	ti = false;
 	int x1;
 	int y1;
-	if(!isCheck(player)) {  ti = true; return false; }
+	if (!isCheck(player)) { ti = true; return false; }
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			if (board[i][j].ident == 'K' && board[i][j].type == player) {
@@ -211,10 +214,10 @@ bool Board::isCheckmate(bool player) {
 	return !pm;
 }
 
-bool Board::makeMove() {
+/*bool Board::makeMove() {
 	int x = rand() % 8;
 	int y = rand() % 8;
-	
+
 	if(board[x][y].type == turn) {
 		if(!board[x][y].hasSp) {
 			std::pair<int, int>* legal = board[x][y].moveArr;
@@ -227,15 +230,34 @@ bool Board::makeMove() {
 			else return movePiece(x, y,  board[x][y].spMoveArr[a- board[x][y].lm].first+x,  board[x][y].spMoveArr[a -  board[x][y].lm].second + y);
 		}
 	}
-	
+
+	return false;
+}*/
+bool Board::makeMove() {
+	int x = rand() % 8;
+	int y = rand() % 8;
+
+	if (board[x][y].type == turn) {
+		if (!board[x][y].hasSp) {
+			std::pair<int, int>* legal = board[x][y].moveArr;
+			int a = rand() % board[x][y].lm;
+			return movePiece(x, y, legal[a].first + x, legal[a].second + y);
+		}
+		else {
+			int a = rand() % (board[x][y].lm + board[x][y].sp);
+			if (a >= board[x][y].lm) return movePiece(x, y, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y);
+			else return movePiece(x, y, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y);
+		}
+	}
+
 	return false;
 }
 
 void Board::promotion(int f, int g) {
 	char input;
 	if (board[f][g].ident == 'P') {
-		if((board[f][g].type == 0 && g == 7) || (board[f][g].type == 1 && g == 0)) {
-			if((!turn && !white.isAi) || (turn && !black.isAi)) {
+		if ((board[f][g].type == 0 && g == 7) || (board[f][g].type == 1 && g == 0)) {
+			if ((!turn && !white.isAi) || (turn && !black.isAi)) {
 				cout << "Please enter type to which the pawn will be promoted: " << endl;
 				cin >> input;
 				if (input == 'Q') {
@@ -243,11 +265,18 @@ void Board::promotion(int f, int g) {
 				}
 				else if (input == 'N') {
 					board[f][g] = Knight(board[f][g].type);
-				}	
+				}
 			}
 			else {
 				board[f][g] = Queen(board[f][g].type);
 			}
 		}
+	}
+}
+int Board::value(char piece, int x, int y) {
+	weight p = weight();
+	switch (piece) {
+	case 'P': return p.pawnArr[x][y];
+	case 'N': return p.knightArr[x][y];
 	}
 }

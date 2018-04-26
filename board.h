@@ -24,6 +24,7 @@ class Board {
 		bool legalMove(int x1, int y1, int x2, int y2);
 		bool makeMove();
 		void promotion(int f, int g);
+		int value(char piece, int x, int y);
 };
 
 #endif /* BOARD_H */

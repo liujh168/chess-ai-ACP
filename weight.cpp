@@ -1,12 +1,6 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include "board.h"
-#include <stdlib.h>
 
-using namespace std;
-
-void weight() {
+class weight {
+public:
 	int pawnArr[8][8] = {
 	{0,  0,  0,  0,  0,  0,  0,  0},
 	{50, 50, 50, 50, 50, 50, 50, 50},
@@ -69,7 +63,6 @@ void weight() {
 	{ 20, 20,  0,  0,  0,  0, 20, 20 },
 	{ 20, 30, 10,  0,  0, 10, 30, 20 }
 	};
-}
-
+};
 
 
