@@ -233,23 +233,28 @@ bool Board::isCheckmate(bool player) {
 
 	return false;
 }*/
-bool Board::makeMove() {
-	int x = rand() % 8;
-	int y = rand() % 8;
+void Board::makeMove() {
+	int bestx = 0;
+	int besty = 0;
+	bool sp = false;
+	int moveno = 0;
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++) {
 
-	if (board[x][y].type == turn) {
-		if (!board[x][y].hasSp) {
-			std::pair<int, int>* legal = board[x][y].moveArr;
-			int a = rand() % board[x][y].lm;
-			return movePiece(x, y, legal[a].first + x, legal[a].second + y);
-		}
-		else {
-			int a = rand() % (board[x][y].lm + board[x][y].sp);
-			if (a >= board[x][y].lm) return movePiece(x, y, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y);
-			else return movePiece(x, y, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y);
+			if (board[x][y].type == turn) {
+				if (!board[x][y].hasSp) {
+					std::pair<int, int>* legal = board[x][y].moveArr;
+					int a = rand() % board[x][y].lm;
+					return movePiece(x, y, legal[a].first + x, legal[a].second + y);
+				}
+				else {
+					int a = rand() % (board[x][y].lm + board[x][y].sp);
+					if (a >= board[x][y].lm) return movePiece(x, y, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y);
+					else return movePiece(x, y, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y);
+				}
+			}
 		}
 	}
-
 	return false;
 }
 
@@ -278,5 +283,9 @@ int Board::value(char piece, int x, int y) {
 	switch (piece) {
 	case 'P': return p.pawnArr[x][y];
 	case 'N': return p.knightArr[x][y];
+	case 'K': return p.kingArr[x][y];
+	case 'B': return p.bishopArr[x][y];
+	case 'R': return p.rookArr[x][y];
+	case 'Q': return p.queenArr[x][y];
 	}
 }
