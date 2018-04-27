@@ -7,6 +7,7 @@
 class Board {
 	private:
 		Piece board[8][8];
+		std::pair<std::pair<Piece, std::pair<int, int>>, std::pair<Piece, std::pair<int, int>>> undo;
 		bool msg = true;
 	public:
 		Player white;
@@ -25,6 +26,7 @@ class Board {
 		bool makeMove();
 		void promotion(int f, int g);
 		int value(char piece, int x, int y);
+		void undoMove();
 };
 
 #endif /* BOARD_H */
