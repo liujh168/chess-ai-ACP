@@ -40,7 +40,7 @@ int main() {
 			}
 		}
 		//b.turn = !b.turn;
-		checkm8 = b.isCheckmate(b.turn);
+		//checkm8 = b.isCheckmate(b.turn);
 		sleep(1.25);
 		system("CLS");
 		b.printBoard();

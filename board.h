@@ -22,7 +22,7 @@ class Board {
 		bool isCheck(int x1, int y1, bool player);
 		bool isCheckmate(bool player);
 		bool legalMove(int x1, int y1, int x2, int y2);
-		void makeMove();
+		bool makeMove();
 		void promotion(int f, int g);
 		int value(char piece, int x, int y);
 };

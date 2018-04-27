@@ -82,42 +82,30 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 				if (x1 - x2 == 0) for (int z = min(y1, y2) + 1; z < max(y1, y2); z++) if (board[x1][z].ident != '*') { br = true; break; }
 				if (y1 - y2 == 0) for (int z = min(x1, x2) + 1; z < max(x1, x2); z++) if (board[z][y1].ident != '*') { br = true; break; }
 			}
-			else if (board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q' && (x1 - x2 != 0 || y1 - y2 != 0))) { //Queens and Bishops
-				if (x1 < x2&&y1 < y2) {
-					for (int x = 1; x < abs(x2 - x1); x++) {
-						if (board[x1 + x][y1 + x].ident != '*') {
-							br = true;
-							break;
+			else if ((board[x1][y1].ident == 'B' || (board[x1][y1].ident == 'Q') && (x1 - x2 != 0 || y1 - y2 != 0))) { //Queens and Bishops
+				if(x1 > x2) { //Piece Moves Left
+					if(y1 > y2) { //Down
+						for(int z = 1; z < abs(x1-x2); z++) {
+							if(board[x1-z][y1-z].ident != '*') { br = true; break; }
+						}
+					}
+					else if(y1 < y2) { //Up
+						for(int z = 1; z < abs(x1-x2); z++) {
+							if(board[x1-z][y1+z].ident != '*') { br = true; break; }
 						}
 					}
 				}
-				else if (x1 < x2&& y1 > y2) {
-					for (int x = 1; x < abs(x2 - x1); x++) {
-						if (board[x1 + x][y1 - x].ident != '*') {
-							br = true;
-							break;
+				else if(x1 < x2) { //Piece Moves Right
+					if(y1 > y2) { //Down
+						for(int z = 1; z < abs(x1-x2); z++) {
+							if(board[x1+z][y1-z].ident != '*') { br = true; break; }
 						}
 					}
-				}
-				else if (x1 > x2&&y1 < y2) {
-					for (int x = 1; x < abs(x2 - x1); x++) {
-						if (board[x1 - x][y1 + x].ident != '*') {
-							br = true;
-							break;
+					else if(y1 < y2) { //Up
+						for(int z = 1; z < abs(x1-x2); z++) {
+							if(board[x1+z][y1+z].ident != '*') { br = true; break; }
 						}
 					}
-				}
-				else if (x1 > x2&&y1 > y2) {
-					for (int x = 1; x < abs(x2 - x1); x++) {
-						if (board[x1 - x][y1 - x].ident != '*') {
-							br = true;
-							break;
-						}
-					}
-				}
-				else {
-					br = true;
-					break;
 				}
 			}
 			if (br) break;
@@ -233,7 +221,7 @@ bool Board::isCheckmate(bool player) {
 
 	return false;
 }*/
-void Board::makeMove() {
+bool Board::makeMove() {
 	int bestx = 0;
 	int besty = 0;
 	bool sp = false;

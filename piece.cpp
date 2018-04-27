@@ -170,7 +170,7 @@ Bishop::Bishop() {
 		moveArr[z].second = x;
 		z++;
 		moveArr[z].first = x;
-		moveArr[z].first = -x;
+		moveArr[z].second = -x;
 		z++;
 	}
 	lm = 28;
@@ -190,7 +190,7 @@ Bishop::Bishop(bool side) {
 		moveArr[z].second = x;
 		z++;
 		moveArr[z].first = x;
-		moveArr[z].first = -x;
+		moveArr[z].second = -x;
 		z++;
 	}
 	lm = 28;
@@ -246,7 +246,7 @@ Queen::Queen() {
 		moveArr[z].second = x;
 		z++;
 		moveArr[z].first = x;
-		moveArr[z].first = -x;
+		moveArr[z].second = -x;
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
@@ -275,7 +275,7 @@ Queen::Queen(bool side) {
 		moveArr[z].second = x;
 		z++;
 		moveArr[z].first = x;
-		moveArr[z].first = -x;
+		moveArr[z].second = -x;
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
