@@ -8,7 +8,7 @@
 using namespace std;
 
 int main() {
-	Board b(Player(false), Player(true));
+	Board b(Player(true), Player(true));
 	cout << "test";
 	string input;
 	bool playing = true;
@@ -16,6 +16,8 @@ int main() {
 	system("CLS");
 	b.printBoard();
 	while(playing && !checkm8) {
+		checkm8 = b.isCheckmate(b.turn);
+		if(checkm8) break;
 		bool mov = true;
 		while(mov) {
 			if((!b.turn && !b.white.isAi) || (b.turn && !b.black.isAi)) {
@@ -39,9 +41,8 @@ int main() {
 				mov = false;
 			}
 		}
-		//b.turn = !b.turn;
-		//checkm8 = b.isCheckmate(b.turn);
-		sleep(1.25);
+		b.turn = !b.turn;
+		sleep(.25);
 		system("CLS");
 		b.printBoard();
 	}

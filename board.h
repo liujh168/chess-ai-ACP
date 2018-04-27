@@ -7,7 +7,7 @@
 class Board {
 	private:
 		Piece board[8][8];
-		bool ti = false;
+		bool msg = true;
 	public:
 		Player white;
 		Player black;
