@@ -1,7 +1,7 @@
 import tkinter as tk
 
 import subprocess, os, copy, time
-
+from tempfile import SpooledTemporaryFile as tempfile
 
 class Tile(tk.Button):
     def __init__(self, master):
@@ -35,28 +35,21 @@ class Tile(tk.Button):
             self.master.piece_to_move = None
         else:
             self.master.piece_to_move = self
-            x1 = self.master.piece_to_move.col
-            y1 = self.master.piece_to_move.row
-
-            move = (self.col_dict[x1] + str(8-y1) + "\n").encode()
-            print(move)
-            self.master.proc.stdin.write(move)
-            #time.sleep(2)
 
 
-        #print(self.row, ", ", self.col, ", ", self.color)
+        print(self.row, ", ", self.col, ", ", self.color)
     
     def isLegal(self):
-        '''
         x1 = self.master.piece_to_move.col
-        y1 = self.master.piece_to_move.row'''
+        y1 = self.master.piece_to_move.row
         x2 = self.col
         y2 = self.row
 
-        move = (self.col_dict[x2] + str(8-y2) + "\n").encode()
-        print(move)
-        self.master.proc.stdin.write(move)
-        #time.sleep(2)
+        moves = [(self.col_dict[x1] + str(8-y1) + "\n").encode(), (self.col_dict[x2] + str(8-y2) + "\n").encode()]
+        print(moves[0], moves[1])
+        self.master.proc.stdin.write(moves[0])
+        time.sleep(1)
+        self.master.proc.stdin.write(moves[1])
 
         #print("piece to move: " + self.col_dict[x1] + str(8-y1))
         #print("where to move: " + self.col_dict[x2] + str(8-y2) + "\n")
@@ -66,19 +59,19 @@ class Tile(tk.Button):
 class App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        
-        self.proc = subprocess.Popen("a ", shell=False, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+
+        self.proc = subprocess.Popen("a ", shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
         board_arr = [["" for _ in range(8)] for _ in range(8)]
         with open("output.txt") as f:
             for i in range(8):
                 line = f.readline()
-                #print(line)
+                print(line)
                 line = line.replace("\r\n", "").replace("\x0c", "").replace("test", "")
                 line = line.split(" ")[:-1]
 
                 board_arr[i] = line
-                #print(line)
+                print(line)
 
         self.place_toggle = False
         self.piece_to_move = None
@@ -113,13 +106,12 @@ class App(tk.Tk):
         with open("output.txt") as f:
             for i in range(8):
                 line = f.readline()
-                #print(line)
+                print(line)
                 line = line.replace("\r\n", "").replace("\x0c", "").replace("test", "")
                 line = line.split(" ")[:-1]
 
                 board_arr[i] = line
                 #print(line)
-                
         for i in range(8):
             for j in range(8):
                 if j % 2 != 0:

@@ -4,6 +4,7 @@
 #include "board.h"
 #include <stdlib.h>
 #include "weight.cpp"
+#include <fstream>
 
 using namespace std;
 
@@ -118,23 +119,54 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 
 void Board::printBoard() {
 	for (int x = 0; x < 8; x++) {
-		std::cout << 8 - x << '|';
+		//std::cout << 8 - x << '|';
 		for (int y = 0; y < 8; y++) {
 			if (board[y][7 - x].ident == '*') { //blank
 				std::cout << "  ";
 			}
 			else if (board[y][7 - x].type) { //piece is black
-				std::cout << "\033[1;31m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
+				std::cout << /*"\033[1;31m" <<*/ board[y][7 - x].ident /*<< "\033[0m\033[1;37m"*/ << ' ';
 			}
 			else if (board[y][7 - x].type == false) { //white
-				std::cout << "\033[1;33m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
+				std::cout << /*"\033[1;33m" <<*/ board[y][7 - x].ident /*<< "\033[0m\033[1;37m"*/ << ' ';
 			}
 		}
 		std::cout << endl;
 	}
-	std::cout << " |A B C D E F G H" << endl;
+	//std::cout << " |A B C D E F G H" << endl;
 }
 
+void Board::writeBoard() {
+	string output;
+	for (int x = 0; x < 8; x++) {
+		//std::cout << 8 - x << '|';
+		for (int y = 0; y < 8; y++) {
+			if (board[y][7 - x].ident == '*') { //blank
+				output += "  ";
+			}
+			else if (board[y][7 - x].type) { //piece is black
+				output += board[y][7 - x].ident;
+				output += " ";
+			}
+			else if (board[y][7 - x].type == false) { //white
+				output += board[y][7 - x].ident;
+				output += " ";
+			}
+		}
+		output += "\n";
+	}
+	//cout << output << endl;
+	ofstream out("output.txt", std::ofstream::out | std::ofstream::trunc);
+	out << output << std::flush;
+	out.flush();
+	out.rdbuf()->pubsetbuf(0, 0);
+	out.close();
+}
+
+void readBoard() {
+	ifstream out("output.txt");
+	
+}
 
 bool Board::isCheck(bool player) {
 	int x1;

@@ -22,7 +22,6 @@
                 "main.cpp",
                 "board.cpp",
                 "player.cpp",
-                "ai.cpp",
                 "piece.cpp"
             ],
             "group": {
