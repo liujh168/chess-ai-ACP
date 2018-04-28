@@ -37,7 +37,7 @@ int main() {
 				 b.promotion(x2, y2);
 			}
 			else {
-				while(!b.makeMove()) {}
+				b.makeMove();
 				mov = false;
 			}
 		}

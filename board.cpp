@@ -224,24 +224,57 @@ bool Board::isCheckmate(bool player) {
 	return true;
 }
 
-bool Board::makeMove() {
-	int x = rand() % 8;
-	int y = rand() % 8;
+void Board::makeMove() {
+	int bestx = 0;
+	int besty = 0;
+	int moveno = 0;
+	int bestscore = -100;
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++) {
 
-	if(board[x][y].type == turn) {
-		if(!board[x][y].hasSp) {
-			std::pair<int, int>* legal = board[x][y].moveArr;
-			int a = rand() % board[x][y].lm;
-			return movePiece(x, y, legal[a].first+x, legal[a].second + y);
-		}
-		else {
-			int a = rand() % (board[x][y].lm + board[x][y].sp);
-			if(a >= board[x][y].lm) return movePiece(x, y,  board[x][y].moveArr[a].first+x,  board[x][y].moveArr[a].second + y);
-			else return movePiece(x, y,  board[x][y].spMoveArr[a- board[x][y].lm].first+x,  board[x][y].spMoveArr[a -  board[x][y].lm].second + y);
+			if (board[x][y].type == turn) {
+				if (!board[x][y].hasSp) {
+					std::pair<int, int>* legal = board[x][y].moveArr;
+					for (int a = 0; a < board[x][y].lm; a++) {
+
+						if (value(board[legal[a].first + x][legal[a].second + y].ident, board[legal[a].first + x][legal[a].second + y].type, legal[a].first + x, legal[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+							cout << "better move found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[legal[a].first + x][legal[a].second + y].ident, board[legal[a].first + x][legal[a].second + y].type, legal[a].first + x, legal[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y);
+							cout << "best score: " << bestscore << endl;
+						}
+					}
+				}
+			}
+			else {
+				for (int a = 0; a < board[x][y].lm + board[x][y].sp; a++) {
+					if (a >= board[x][y].lm)
+					{
+						if (value(board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].ident, board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].type, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+							cout << "better non-sp found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].ident, board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].type, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y);
+							cout << "best score: " << bestscore << endl;
+						}
+					}
+					else {
+						if (value(board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].ident, board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].type, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y) - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+							cout << "better sp found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].ident, board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].type, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y) - value(board[x][y].ident, board[x][y].type, x, y);
+							cout << "best score: " << bestscore << endl;
+						}
+					}
+				}
+			}
 		}
 	}
-
-	return false;
 }
 /*bool Board::makeMove() {
 	int bestx = 0;
