@@ -1,8 +1,8 @@
-R1 N1 B1 Q1 K1 B1 N1 R1 
-   P1 P1 P1 P1 P1 P1 P1 
-P1                      
+R1 N1 B1 Q1 K1    N1 R1 
+P1 P1 P1 P1    P1 B1 P1 
+            P1    P1    
                         
-               P0       
-                        
-P0 P0 P0 P0 P0    P0 P0 
+         P0    P0       
+                  P0    
+P0 P0 P0    P0       P0 
 R0 N0 B0 Q0 K0 B0 N0 R0 
