@@ -59,8 +59,19 @@ Board::Board(Player white, Player black) {
 
 bool Board::movePiece(int x1, int y1, int x2, int y2) {
 	if (legalMove(x1, y1, x2, y2)) {
+		undo.first.first = board[x1][y1];
+		undo.second.first = board[x2][y2];
+		undo.first.second.first = x1;
+		undo.first.second.second = y1;
+		undo.second.second.first = x2;
+		undo.second.second.second = y2;
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
+		if(isCheck(turn)) {
+			undoMove();
+			if(msg) cout << "Moving Piece puts you in check!" << endl;
+			return false;
+		}
 		return true;
 	}
 	return false;
@@ -219,7 +230,7 @@ bool Board::isCheck(bool player) {
 	turn = !turn;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if (board[i][j].type != player) if (legalMove(i, j, x1, y1)) {
+			if (board[i][j].ident != '*' && board[i][j].type != player) if (legalMove(i, j, x1, y1)) {
 				turn = !turn;
 				return true;
 			}
@@ -250,49 +261,87 @@ bool Board::isCheckmate(bool player) {
 	int x1;
 	int y1;
 	if (!isCheck(player)) return false;
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			if (board[i][j].ident == 'K' && board[i][j].type == player) {
-				x1 = i;
-				y1 = j;
-				i = 8;
-				j = 8;
-			}
-		}
-	}
-	bool pm = false;
-	for (int x = -1; x < 2; x++) for (int y = -1; y < 2; y++) {
-		if (x == 0 && y == 0) continue;
-		if (legalMove(x1, y1, x1 + x, y1 + y)) {
-			pm = true;
-			if (!isCheck(x1 + x, y1 + y, player)) {
-				msg = true;
-				return false;
+	for(int x = 0; x < 8; x++) {
+		for(int y = 0; y < 8; y++) {
+			if(board[x][y].ident != '*' && board[x][y].type == player) for(int z = 0; z < board[x][y].lm + board[x][y].sp; z++) {
+				if(z < board[x][y].lm) {
+					if(movePiece(x, y, x + board[x][y].moveArr[z].first, y + board[x][y].moveArr[z].second)) {
+						if(!isCheck(player)) {
+							undoMove();
+							msg = true;
+							return false;
+						}
+						undoMove();
+					}
+				}
+				else if(board[x][y].hasSp) {
+					if(movePiece(x, y, x + board[x][y].spMoveArr[z-board[x][y].lm].first, y + board[x][y].spMoveArr[z-board[x][y].lm].second)) {
+						if(!isCheck(player)) {
+							undoMove();
+							msg = true;
+							return false;
+						}
+						undoMove();
+					}
+				}
 			}
 		}
 	}
 	msg = true;
-	return !pm;
+	return true;
 }
 
-bool Board::makeMove() {
-	int x = rand() % 8;
-	int y = rand() % 8;
+void Board::makeMove() {
+	int bestx = 0;
+	int besty = 0;
+	int moveno = 0;
+	int bestscore = -100;
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++) {
 
-	if(board[x][y].type == turn) {
-		if(!board[x][y].hasSp) {
-			std::pair<int, int>* legal = board[x][y].moveArr;
-			int a = rand() % board[x][y].lm;
-			return movePiece(x, y, legal[a].first+x, legal[a].second + y);
-		}
-		else {
-			int a = rand() % (board[x][y].lm + board[x][y].sp);
-			if(a >= board[x][y].lm) return movePiece(x, y,  board[x][y].moveArr[a].first+x,  board[x][y].moveArr[a].second + y);
-			else return movePiece(x, y,  board[x][y].spMoveArr[a- board[x][y].lm].first+x,  board[x][y].spMoveArr[a -  board[x][y].lm].second + y);
+			if (board[x][y].type == turn) {
+				if (!board[x][y].hasSp) {
+					std::pair<int, int>* legal = board[x][y].moveArr;
+					for (int a = 0; a < board[x][y].lm; a++) {
+
+						if (value(board[legal[a].first + x][legal[a].second + y].ident, board[legal[a].first + x][legal[a].second + y].type, legal[a].first + x, legal[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+							cout << "better move found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[legal[a].first + x][legal[a].second + y].ident, board[legal[a].first + x][legal[a].second + y].type, legal[a].first + x, legal[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y);
+							cout << "best score: " << bestscore << endl;
+						}
+					}
+				}
+			}
+			else {
+				for (int a = 0; a < board[x][y].lm + board[x][y].sp; a++) {
+					if (a >= board[x][y].lm)
+					{
+						if (value(board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].ident, board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].type, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+							cout << "better non-sp found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].ident, board[board[x][y].moveArr[a].first + x][board[x][y].moveArr[a].second + y].type, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y) - value(board[x][y].ident, board[x][y].type, x, y);
+							cout << "best score: " << bestscore << endl;
+						}
+					}
+					else {
+						if (value(board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].ident, board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].type, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y) - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+							cout << "better sp found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].ident, board[board[x][y].spMoveArr[a - board[x][y].lm].first + x][board[x][y].spMoveArr[a - board[x][y].lm].second + y].type, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y) - value(board[x][y].ident, board[x][y].type, x, y);
+							cout << "best score: " << bestscore << endl;
+						}
+					}
+				}
+			}
 		}
 	}
-
-	return false;
 }
 /*bool Board::makeMove() {
 	int bestx = 0;
@@ -349,4 +398,9 @@ int Board::value(char piece, int x, int y) {
 	case 'R': return p.rookArr[x][y];
 	case 'Q': return p.queenArr[x][y];
 	}
+}
+
+void Board::undoMove() {
+	board[undo.first.second.first][undo.first.second.second] = undo.first.first;
+	board[undo.second.second.first][undo.second.second.second] = undo.second.first;
 }
