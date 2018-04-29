@@ -2,6 +2,17 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import subprocess, os, copy, time
 
+'''
+TODO
+*IMPLEMENT PROMOTION SUBWINDOW
+    *CHECK FOR PAWNS WHERE ROW=0,8
+    *DIRECTLY EDIT OUTPUT.TXT
+*CHECKMATE HANDLING
+    *ADD CHECK AT BEGINNING OF MAIN_GUI.CPP
+    *UPON START SUBROUTINE RUN STDOUT.READLINE
+    *IF STRING CONTAINS "CHECKMATE" UPDATE LABEL
+'''
+
 
 class Tile(tk.Button):
     def __init__(self, master):
