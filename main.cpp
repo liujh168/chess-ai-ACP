@@ -10,45 +10,31 @@ using namespace std;
 
 int main() {
 	Board b(Player(false), Player(true));
-	cout << "test";
+	b.readBoard();
+	// /b.printBoard();
+	//cout << "test";
 	string input;
 	bool playing = true;
 	bool checkm8 = false;
-	system("CLS");
+	//system("CLS");
 	b.writeBoard();
-	while(playing && !checkm8) {
-		checkm8 = b.isCheckmate(b.turn);
-		if(checkm8) break;
-		bool mov = true;
-		while(mov) {
-			if((!b.turn && !b.white.isAi) || (b.turn && !b.black.isAi)) {
-				cout << "Please enter the location of the piece to be moved: ";
-				//std::getline(std::cin, input);
-				std::getline(cin, input);
-				if(input.compare("quit") == 0) { playing = false; break; }
-				int x1 = input.at(0) - 65;
-				int y1 = input.at(1) - 49;
-				cout << endl << "Please enter where you would like to move the piece:";
-				//std::getline(std::cin, input);
-				std::getline(cin, input);
-				cout << endl;
-				if(input.compare("quit") == 0) { playing = false; break; }
-				int x2 = input.at(0) - 65;
-				int y2 = input.at(1) - 49;
-				cout << x1 << " " << y1 << " " << x2 << " " << y2 << " " << endl;
-				mov = !b.movePiece(x1, y1, x2, y2);
-				b.promotion(x2, y2);
-			}
-			else {
-				while(!b.makeMove()) {}
-				mov = false;
-			}
-		}
-		b.turn = !b.turn;
-		sleep(.25);
-		system("CLS");
-		b.writeBoard();
-	}
-	cout << "Checkmate!" << endl;
+	bool mov = true;
+	//if((!b.turn && !b.white.isAi) || (b.turn && !b.black.isAi)) {
+		std::getline(cin, input);
+		cout << endl;
+		int x1 = input.at(0) - 65;
+		int y1 = input.at(1) - 49;
+		std::getline(cin, input);
+		cout << endl;
+		int x2 = input.at(0) - 65;
+		int y2 = input.at(1) - 49;
+		mov = b.movePiece(x1, y1, x2, y2);
+		b.promotion(x2, y2);
+		b.turn = 1;
+		if(mov) {
+		while(!b.makeMove()) {}
+		mov = false;}
+	//system("CLS");
+	b.writeBoard();
 	return 0;
 }

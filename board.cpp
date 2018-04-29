@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "weight.cpp"
 #include <fstream>
+#include <typeinfo>
 
 using namespace std;
 
@@ -142,14 +143,11 @@ void Board::writeBoard() {
 		//std::cout << 8 - x << '|';
 		for (int y = 0; y < 8; y++) {
 			if (board[y][7 - x].ident == '*') { //blank
-				output += "  ";
+				output += "   ";
 			}
-			else if (board[y][7 - x].type) { //piece is black
+			else { //piece is black
 				output += board[y][7 - x].ident;
-				output += " ";
-			}
-			else if (board[y][7 - x].type == false) { //white
-				output += board[y][7 - x].ident;
+				output += to_string(board[y][7-x].type);
 				output += " ";
 			}
 		}
@@ -157,15 +155,52 @@ void Board::writeBoard() {
 	}
 	//cout << output << endl;
 	ofstream out("output.txt", std::ofstream::out | std::ofstream::trunc);
-	out << output << std::flush;
+	out << output;
 	out.flush();
 	out.rdbuf()->pubsetbuf(0, 0);
 	out.close();
 }
 
-void readBoard() {
+void Board::readBoard() {
+	string* temp = new string[8];
 	ifstream out("output.txt");
-	
+	int k = 0;
+	cout << "testing";
+	while(!out.eof() && k < 8) {
+		getline(out, temp[k]); // read the next line into the next string
+		++k;
+	}
+	//cout << temp[0] << temp[1];
+	out.close();
+
+	char ptr;
+
+	for(int i = 0; i < 8; ++i) {
+		for(int j = 0; j < 8; j++) {
+			//cout << typeid(temp[i].at(j*3)).name() << " ";
+
+			ptr = temp[i].at(j*3);
+			
+			if(ptr == 'R') {
+				board[j][7-i] = Rook(temp[i].at(j*3+1) - '0');
+			}	else if(ptr == 'N')	{
+				board[j][7-i] = Knight(temp[i].at(j*3+1) - '0');
+			}else if(ptr == 'B')	{
+				board[j][7-i] = Bishop(temp[i].at(j*3+1) - '0');
+			}else if(ptr == 'Q')	{
+				board[j][7-i] = Queen(temp[i].at(j*3+1) - '0');
+			}else if(ptr == 'K')	{
+				board[j][7-i] = King(temp[i].at(j*3+1) - '0');
+			}else if(ptr == 'P')	{
+				board[j][7-i] = Pawn(temp[i].at(j*3+1) - '0');
+			} else {
+				board[j][7-i] = Piece();
+			}
+		}
+		//cout << endl;
+	}
+	printBoard();
+
 }
 
 bool Board::isCheck(bool player) {
