@@ -343,7 +343,7 @@ void Board::makeMove() {
 		}
 	}
 }
-/*bool Board::makeMove() {
+bool Board::deprecatedMakeMove() {
 	int bestx = 0;
 	int besty = 0;
 	bool sp = false;
@@ -367,7 +367,7 @@ void Board::makeMove() {
 	}
 	return false;
 }
-*/
+
 void Board::promotion(int f, int g) {
 	char input;
 	if (board[f][g].ident == 'P') {
@@ -388,7 +388,7 @@ void Board::promotion(int f, int g) {
 		}
 	}
 }
-int Board::value(char piece, int x, int y) {
+int Board::value(char piece, bool color, int x, int y) {
 	weight p = weight();
 	switch (piece) {
 	case 'P': return p.pawnArr[x][y];

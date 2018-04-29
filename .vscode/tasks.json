@@ -19,7 +19,7 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "main.cpp",
+                "main_gui.cpp",
                 "board.cpp",
                 "player.cpp",
                 "piece.cpp"

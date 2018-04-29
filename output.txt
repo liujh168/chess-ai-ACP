@@ -1,6 +1,6 @@
 R1 N1 B1 Q1 K1 B1 N1 R1 
-P1 P1    P1 P1 P1 P1 P1 
-      P1                
+   P1 P1 P1 P1 P1 P1 P1 
+P1                      
                         
                P0       
                         

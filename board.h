@@ -26,6 +26,7 @@ class Board {
 		bool isCheckmate(bool player);
 		bool legalMove(int x1, int y1, int x2, int y2);
 		void makeMove();
+		bool deprecatedMakeMove();
 		void promotion(int f, int g);
 		int value(char piece, bool colour, int x, int y);
 		void undoMove();
