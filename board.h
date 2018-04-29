@@ -19,6 +19,8 @@ class Board {
 		bool whiteCheckmate(); //Checks whether or not white is in checkmate; will be checked after each move
 		bool blackCheckmate(); //Checks whether or not black is in checkmate; will be checked after each move
 		void printBoard(); //Prints out the current state of the board
+		void writeBoard();
+		void readBoard();
 		bool isCheck(bool player); //tests for checkage
 		bool isCheck(int x1, int y1, bool player);
 		bool isCheckmate(bool player);
