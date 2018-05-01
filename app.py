@@ -18,12 +18,9 @@ class Tile(tk.Button):
 
         self.master = master.master
 
-        self.col_dict = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H"}
-
     def set_attr(self, color, row, col):
         self.configure(bg="black") if color else self.configure(bg="white")
-        self.configure(command=self.out, text="   ", relief=tk.FLAT)
-        self.configure(font=("Segoe UI", 28))
+        self.configure(command=self.out, text="   ", relief=tk.FLAT, font=("Segoe UI", 28))
 
         self.color = color
         self.row = row
@@ -39,7 +36,7 @@ class Tile(tk.Button):
             self.master.piece_to_move = None
         else:
             self.master.piece_to_move = self
-            self.master.to_move_label.config(text="moving piece from %s" % (self.col_dict[self.master.piece_to_move.col] + str(8-self.master.piece_to_move.row)))
+            self.master.to_move_label.config(text="Moving piece from %s" % (self.master.col_dict[self.master.piece_to_move.col] + str(8-self.master.piece_to_move.row)))
             self.configure(bg="gray")
 
     def isLegal(self):
@@ -49,12 +46,9 @@ class Tile(tk.Button):
         y2 = self.row
 
         self.master.call_sub()
+        self.master.proc.communicate((self.master.col_dict[x1] + str(8-y1) + "\n").encode() + (self.master.col_dict[x2] + str(8-y2) + "\n").encode())
+        self.master.end_sub()
 
-        moves = [(self.col_dict[x1] + str(8-y1) + "\n").encode(), (self.col_dict[x2] + str(8-y2) + "\n").encode()]
-
-        self.master.proc.communicate(moves[0] + moves[1])
-
-        #self.master.check_promotions()
         self.master.to_move_label.config(text="")
                 
         return True
@@ -65,8 +59,6 @@ class Promotion_Window(tk.Toplevel):
 
         self.master = master
 
-        self.col_dict = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H"}
-
         self.pro_rook = tk.Button(self, text=self.master.convert_unicode("R"), command=lambda: self.promote_to("R"), font=("Segoe UI", 28), relief=tk.RIDGE)
         self.pro_knig = tk.Button(self, text=self.master.convert_unicode("N"), command=lambda: self.promote_to("N"), font=("Segoe UI", 28), relief=tk.RIDGE)
         self.pro_bish = tk.Button(self, text=self.master.convert_unicode("B"), command=lambda: self.promote_to("B"), font=("Segoe UI", 28), relief=tk.RIDGE)
@@ -75,7 +67,7 @@ class Promotion_Window(tk.Toplevel):
     def set_attr(self, pos):
         self.row, self.col = pos[0], pos[1]
 
-        tk.Label(self, text="promoting \u2659 at " + self.col_dict[self.col] + str(8-self.row), font=("Segoe UI", 14)).pack(side=tk.TOP)
+        tk.Label(self, text="promoting \u2659 at " + self.master.col_dict[self.col] + str(8-self.row), font=("Segoe UI", 14)).pack(side=tk.TOP)
 
         self.pro_rook.pack(side=tk.LEFT)
         self.pro_knig.pack(side=tk.LEFT)
@@ -96,10 +88,9 @@ class App(tk.Tk):
 
         self.title("chess-ai-acp")
 
-        board_arr = [["" for _ in range(8)] for _ in range(8)]
+        self.col_dict = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H"}
 
-        self.reset_button = ttk.Button(self, text="Start Over", command=self.reset)
-        self.reset_button.pack()
+        ttk.Button(self, text="Start Over", command=self.reset).pack()
 
         self.to_move_label = tk.Label(self)
         self.to_move_label.pack()
@@ -107,14 +98,6 @@ class App(tk.Tk):
         self.board_frame = tk.Frame(self)
         self.board_frame.pack()
 
-        with open("output.txt") as f:
-            for i in range(8):
-                line = f.readline()
-                line = line.replace("\r\n", "").replace("\x0c", "").replace("test", "")
-                line = list(map(''.join, zip(*[iter(line)]*3)))
-                board_arr[i] = line
-
-        self.place_toggle = False
         self.piece_to_move = None
 
         self.cell_array = [[Tile(self.board_frame) for _ in range(8)] for _ in range(8)]
@@ -123,16 +106,10 @@ class App(tk.Tk):
 
         for i in range(8):
             for j in range(8):
-                if board_arr[i][j] == "":
-                    board_arr[i][j] = "  "
-                if j % 2 != 0:
-                    self.cell_array[i][j].set_attr(True, i , j) if row_color else self.cell_array[i][j].set_attr(False, i, j)
-                    self.cell_array[i][j].configure(text=" " + self.convert_unicode(board_arr[i][j][0]) + " ", fg=("red" if board_arr[i][j][1] == "0" else "blue"))
-                    
-                else:
-                    self.cell_array[i][j].set_attr(False, i, j) if row_color else self.cell_array[i][j].set_attr(True, i, j)
-                    self.cell_array[i][j].configure(text=" " + self.convert_unicode(board_arr[i][j][0]) + " ", fg=("red" if board_arr[i][j][1] == "0" else "blue"))
+                self.cell_array[i][j].set_attr(False if j % 2 == 0 else True, i, j) if row_color else self.cell_array[i][j].set_attr(True if j % 2 == 0 else False, i, j)
             row_color = not row_color
+
+        self.set_board()
 
     def __str__(self):
         output = ""
