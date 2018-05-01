@@ -30,6 +30,7 @@ class Board {
 		void promotion(int f, int g);
 		int value(char piece, bool colour, int x, int y);
 		void undoMove();
+		int turnCount;
 };
 
 #endif /* BOARD_H */

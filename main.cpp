@@ -8,7 +8,7 @@
 using namespace std;
 
 int main() {
-	Board b(Player(true), Player(true));
+	Board b(Player(false), Player(false));
 	cout << "test";
 	string input;
 	bool playing = true;
@@ -37,7 +37,7 @@ int main() {
 				b.promotion(x2, y2);
 			}
 			else {
-				while(!b.makeMove()) {}
+				while(!b.deprecatedMakeMove()) {}
 				mov = false;
 			}
 		}

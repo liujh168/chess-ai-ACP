@@ -10,6 +10,7 @@
 using namespace std;
 
 Board::Board() {
+	turnCount = 0;
 	turn = false;
 	white = Player();
 	black = Player();
@@ -34,6 +35,7 @@ Board::Board() {
 }
 
 Board::Board(Player white, Player black) {
+	turnCount = 0;
 	this->white = white;
 	this->black = black;
 	turn = false;
@@ -72,6 +74,7 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 			if(msg) cout << "Moving Piece puts you in check!" << endl;
 			return false;
 		}
+		turnCount++;
 		return true;
 	}
 	return false;
@@ -83,8 +86,15 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 	if (!(board[x1][y1].type == turn)) { if(msg) std::cout << "Target piece is not yours" << std::endl; return false; }
 	if (board[x1][y1].ident == 'P') { //Special Pawn movement/attacking 
 		if (x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2 - y1) == 2) return true;
-		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1 && board[x2][y2].ident != '*') return true;
+		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1 ) {
+			if( board[x2][y2].ident != '*') return true;
+			//en passant
+			else if ((undo.second.second.first == x1 - 1 || undo.second.second.first == x1 + 1) && (x2 == undo.second.second.first - 1) && undo.first.second.second == 7) {
+				return true;
+			}
+		}
 	}
+
 	std::pair<int, int>* moves = board[x1][y1].move();
 	for (int x = 0; moves[x].first != 0 || moves[x].second != 0; x++) {
 		if (moves[x].first + x1 == x2 && moves[x].second + y1 == y2) {
@@ -131,21 +141,21 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 
 void Board::printBoard() {
 	for (int x = 0; x < 8; x++) {
-		//std::cout << 8 - x << '|';
+		std::cout << 8 - x << '|';
 		for (int y = 0; y < 8; y++) {
 			if (board[y][7 - x].ident == '*') { //blank
 				std::cout << "  ";
 			}
 			else if (board[y][7 - x].type) { //piece is black
-				std::cout << /*"\033[1;31m" <<*/ board[y][7 - x].ident /*<< "\033[0m\033[1;37m"*/ << ' ';
+				std::cout << "\033[1;31m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
 			}
 			else if (board[y][7 - x].type == false) { //white
-				std::cout << /*"\033[1;33m" <<*/ board[y][7 - x].ident /*<< "\033[0m\033[1;37m"*/ << ' ';
+				std::cout << "\033[1;33m" << board[y][7 - x].ident << "\033[0m\033[1;37m" << ' ';
 			}
 		}
 		std::cout << endl;
 	}
-	//std::cout << " |A B C D E F G H" << endl;
+	std::cout << " |A B C D E F G H" << endl;
 }
 
 void Board::writeBoard() {
