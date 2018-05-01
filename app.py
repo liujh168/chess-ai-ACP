@@ -59,20 +59,15 @@ class Promotion_Window(tk.Toplevel):
 
         self.master = master
 
-        self.pro_rook = tk.Button(self, text=self.master.convert_unicode("R"), command=lambda: self.promote_to("R"), font=("Segoe UI", 28), relief=tk.RIDGE)
-        self.pro_knig = tk.Button(self, text=self.master.convert_unicode("N"), command=lambda: self.promote_to("N"), font=("Segoe UI", 28), relief=tk.RIDGE)
-        self.pro_bish = tk.Button(self, text=self.master.convert_unicode("B"), command=lambda: self.promote_to("B"), font=("Segoe UI", 28), relief=tk.RIDGE)
-        self.pro_quee = tk.Button(self, text=self.master.convert_unicode("Q"), command=lambda: self.promote_to("Q"), font=("Segoe UI", 28), relief=tk.RIDGE)
-
     def set_attr(self, pos):
         self.row, self.col = pos[0], pos[1]
 
         tk.Label(self, text="promoting \u2659 at " + self.master.col_dict[self.col] + str(8-self.row), font=("Segoe UI", 14)).pack(side=tk.TOP)
 
-        self.pro_rook.pack(side=tk.LEFT)
-        self.pro_knig.pack(side=tk.LEFT)
-        self.pro_bish.pack(side=tk.LEFT)
-        self.pro_quee.pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("R"), command=lambda: self.promote_to("R"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("N"), command=lambda: self.promote_to("N"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("B"), command=lambda: self.promote_to("B"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("Q"), command=lambda: self.promote_to("Q"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
 
     def promote_to(self, piece):
         self.master.cell_array[self.row][self.col].config(text=" " + self.master.convert_unicode(piece) + " ")
