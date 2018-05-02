@@ -9,6 +9,7 @@ TODO
     *ADD CHECK AT BEGINNING OF MAIN_GUI.CPP
     *UPON START SUBROUTINE RUN STDOUT.READLINE
     *IF STRING CONTAINS "CHECKMATE" UPDATE LABEL
+    
 '''
 
 
@@ -20,13 +21,13 @@ class Tile(tk.Button):
 
     def set_attr(self, color, row, col):
         self.configure(bg="black") if color else self.configure(bg="white")
-        self.configure(command=self.out, text="   ", relief=tk.FLAT, font=("Segoe UI", 28))
+        self.configure(command=self.out, text="   ", relief=tk.FLAT, font=("Segoe UI", 18))
 
         self.color = color
         self.row = row
         self.col = col
 
-        self.grid(row=row, column=col)
+        self.grid(row=row, column=col, sticky=tk.N+tk.S+tk.E+tk.W)
 
     def out(self):
         if (self.master.piece_to_move != None) and self.isLegal():
@@ -47,7 +48,6 @@ class Tile(tk.Button):
 
         self.master.call_sub()
         self.master.proc.communicate((self.master.col_dict[x1] + str(8-y1) + "\n").encode() + (self.master.col_dict[x2] + str(8-y2) + "\n").encode())
-        self.master.end_sub()
 
         self.master.to_move_label.config(text="")
                 
@@ -62,15 +62,15 @@ class Promotion_Window(tk.Toplevel):
     def set_attr(self, pos):
         self.row, self.col = pos[0], pos[1]
 
-        tk.Label(self, text="promoting \u2659 at " + self.master.col_dict[self.col] + str(8-self.row), font=("Segoe UI", 14)).pack(side=tk.TOP)
+        tk.Label(self, text="Promoting \u2659 at " + self.master.col_dict[self.col] + str(8-self.row), font=("Segoe UI", 12)).pack(side=tk.TOP)
 
-        tk.Button(self, text=self.master.convert_unicode("R"), command=lambda: self.promote_to("R"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
-        tk.Button(self, text=self.master.convert_unicode("N"), command=lambda: self.promote_to("N"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
-        tk.Button(self, text=self.master.convert_unicode("B"), command=lambda: self.promote_to("B"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
-        tk.Button(self, text=self.master.convert_unicode("Q"), command=lambda: self.promote_to("Q"), font=("Segoe UI", 28), relief=tk.RIDGE).pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("R"), command=lambda: self.promote_to("R"), font=("Segoe UI", 18), relief=tk.RIDGE).pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("N"), command=lambda: self.promote_to("N"), font=("Segoe UI", 18), relief=tk.RIDGE).pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("B"), command=lambda: self.promote_to("B"), font=("Segoe UI", 18), relief=tk.RIDGE).pack(side=tk.LEFT)
+        tk.Button(self, text=self.master.convert_unicode("Q"), command=lambda: self.promote_to("Q"), font=("Segoe UI", 18), relief=tk.RIDGE).pack(side=tk.LEFT)
 
     def promote_to(self, piece):
-        self.master.cell_array[self.row][self.col].config(text=" " + self.master.convert_unicode(piece) + " ")
+        self.master.cell_array[self.row][self.col].config(text=self.master.convert_unicode(piece))
 
         self.master.write_board()
         
@@ -85,13 +85,17 @@ class App(tk.Tk):
 
         self.col_dict = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H"}
 
-        ttk.Button(self, text="Start Over", command=self.reset).pack()
+        ttk.Style().configure('my.TButton', font=('Segoe UI', 12))
+        ttk.Button(self, text="Start Over", command=self.reset, style='my.TButton').pack()
 
-        self.to_move_label = tk.Label(self)
+        self.to_move_label = tk.Label(self, font=("Segoe UI", 12))
         self.to_move_label.pack()
 
         self.board_frame = tk.Frame(self)
         self.board_frame.pack()
+
+        self.board_frame.columnconfigure(0, weight=1)
+        self.board_frame.rowconfigure(0, weight=1)
 
         self.piece_to_move = None
 
@@ -127,7 +131,6 @@ class App(tk.Tk):
     def reset(self):
         with open("output.txt", "w") as f:
             f.write("R1 N1 B1 Q1 K1 B1 N1 R1 \nP1 P1 P1 P1 P1 P1 P1 P1 \n                        \n                        \n                        \n                        \nP0 P0 P0 P0 P0 P0 P0 P0 \nR0 N0 B0 Q0 K0 B0 N0 R0 ")
-            f.close()
 
         self.set_board()
 
@@ -167,7 +170,7 @@ class App(tk.Tk):
                 
         for i in range(8):
             for j in range(8):
-                self.cell_array[i][j].configure(text=" " + self.convert_unicode(board_arr[i][j][0]) + " ", fg=("red" if board_arr[i][j][1] == "0" else "blue"))
+                self.cell_array[i][j].configure(text=self.convert_unicode(board_arr[i][j][0]), fg=("red" if board_arr[i][j][1] == "0" else "blue"))
 
     def convert_unicode(self, piece):
         if "R" in piece:
@@ -203,6 +206,4 @@ class App(tk.Tk):
 
 
 if __name__ == '__main__':
-    os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    a = App()
-    a.mainloop(n=0)
+    App().mainloop(n=0)
