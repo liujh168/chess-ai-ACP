@@ -37,8 +37,8 @@ int main() {
 				b.promotion(x2, y2);
 			}
 			else {
-				while(!b.deprecatedMakeMove()) {}
-				//b.makeMove();
+				//while(!b.deprecatedMakeMove()) {}
+				b.makeMove();
 				mov = false;
 			}
 		}
