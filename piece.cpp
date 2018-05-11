@@ -4,6 +4,7 @@
 using namespace std;
 
 Piece::Piece() {
+	weight = 0;
 	ident = '*';
 	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
