@@ -43,7 +43,7 @@ int main() {
 			}
 		}
 		b.turn = !b.turn;
-		sleep(.25);
+		sleep(1.5);
 		system("CLS");
 		b.printBoard();
 	}
