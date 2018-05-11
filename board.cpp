@@ -85,6 +85,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 	if (x1 > 7 || x1 < 0 || y1 > 7 || y1 < 0 || x2 > 7 || x2 < 0 || y2 > 7 || y2 < 0) { if ((!turn && !white.isAi) || (turn && !black.isAi))if (msg)std::cout << "Out of bounds" << std::endl; return false; }
 	if (!(board[x1][y1].isInit)) { if ((!turn && !white.isAi) || (turn && !black.isAi)) if (msg) std::cout << "Target Piece doesn't exist" << std::endl; return false; }
 	if (!(board[x1][y1].type == turn)) { if (msg) std::cout << "Target piece is not yours" << std::endl; return false; }
+	if (!(board[x2][y2].ident == '*' || board[x2][y2].type != board[x1][y1].type)) { if(msg) std::cout << "Trying to capture your own piece" << stld::endl; return false; }
 	if (board[x1][y1].ident == 'P') { //Special Pawn movement/attacking 
 		if (x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2 - y1) == 2) return true;
 		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1) {
@@ -100,7 +101,6 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 	for (int x = 0; moves[x].first != 0 || moves[x].second != 0; x++) {
 		if (moves[x].first + x1 == x2 && moves[x].second + y1 == y2) {
 			bool br = false;
-			if (!(board[x2][y2].ident == '*' || board[x2][y2].type != board[x1][y1].type)) break;
 			else if (board[x1][y1].ident == 'P' && board[x2][y2].ident != '*') break;
 			else if (board[x1][y1].ident == 'R' || ((board[x1][y1].ident == 'Q' && (x1 - x2 == 0 || y1 - y2 == 0)))) {
 				if (x1 - x2 == 0) for (int z = min(y1, y2) + 1; z < max(y1, y2); z++) if (board[x1][z].ident != '*') { br = true; break; }
