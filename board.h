@@ -12,7 +12,7 @@ class Board {
 		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > lastWhite;
 		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > lastBlack2;
 		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > lastWhite2;
-		bool msg = true;
+		bool msg = false;
 	public:
 		Player white;
 		Player black;
