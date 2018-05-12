@@ -338,6 +338,9 @@ void Board::makeMove() {
 	int besty = 0;
 	int moveno = 0;
 	int bestscore = -32767;
+	std::pair<std::pair<int, int>, int>* moves;
+	moves = (std::pair<std::pair<int, int>, int>*)malloc(20*sizeof moves);
+	int msize = 0;
 	for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
 		for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); a++) {
 			int x2, y2;
@@ -350,29 +353,47 @@ void Board::makeMove() {
 				y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
 			}
 			if(!legalMove(x, y, x2, y2)) continue;
+			int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
 			if (!turn) {
 				if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x && lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
-					if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-						bestx = x;
-						besty = y;
-						moveno = a;
-						bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
+					if (score > bestscore) {
+						moves[0].first.first = x;
+						moves[0].first.second = y;
+						moves[0].second = a;
+						msize = 1;
+						bestscore = score;
+					}
+					else if (score == bestscore) {
+						moves[msize].first.first = x;
+						moves[msize].first.second = y;
+						moves[msize].second = a;
+						msize++;
 					}
 				}
 			}
 			else {
 				if (!(lastBlack2.first.first.ident == board[x][y].ident && lastBlack2.first.second.first == x&&lastBlack2.first.second.second == y&&lastBlack2.second.second.first == x2&&lastBlack.second.second.second == y2)) {
-					if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-						bestx = x;
-						besty = y;
-						moveno = a;
-						bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
+					if (score > bestscore) {
+						moves[0].first.first = x;
+						moves[0].first.second = y;
+						moves[0].second = a;
+						msize = 1;
+						bestscore = score;
+					}
+					else if (score == bestscore) {
+						moves[msize].first.first = x;
+						moves[msize].first.second = y;
+						moves[msize].second = a;
+						msize++;
 					}
 				}
 			}
 		}		
 	}
-	
+	int r = rand() % msize;
+	bestx = moves[r].first.first;
+	besty = moves[r].first.second;
+	moveno = moves[r].second;
 	int x2, y2;
 	if(moveno < board[bestx][besty].lm) {
 		x2 = board[bestx][besty].moveArr[moveno].first + bestx;
