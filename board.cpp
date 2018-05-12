@@ -335,7 +335,6 @@ void Board::makeMove() {
 
 	for (int x = 0; x < 8; x++) {
 		for (int y = 0; y < 8; y++) {
-
 			if (board[x][y].type == turn) {
 				if (!board[x][y].hasSp) {
 					std::pair<int, int>* legal = board[x][y].moveArr;
@@ -344,7 +343,7 @@ void Board::makeMove() {
 						//cout << "regular" << endl;
 						int x2 = legal[a].first + x;
 						int y2 = legal[a].second + y;
-						if (turn) {
+						if (!turn) {
 							if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x&&lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
 								if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
 									if (legalMove(x, y, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y)) {
@@ -383,7 +382,7 @@ void Board::makeMove() {
 							//cout << "reg but has sp" << endl;
 							int x2 = board[x][y].moveArr[a].first + x;
 							int y2 = board[x][y].moveArr[a].second + y;
-							if (turn) {
+							if (!turn) {
 								if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x&&lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
 									if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
 										if (legalMove(x, y, x2, y2)) {
@@ -416,7 +415,7 @@ void Board::makeMove() {
 							//cout << "sp" << endl;
 							int x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
 							int y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
-							if (turn) {
+							if (!turn) {
 								if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x&&lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
 
 									if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
@@ -451,78 +450,75 @@ void Board::makeMove() {
 			}
 		}
 	}
-}
-
-if (turn) {
-	lastWhite2 = lastWhite;
-}
-else {
-	lastBlack2 = lastBlack;
-}
-//cout << bestx << ' ' << besty << ' ' << moveno << ' ' << bestscore << endl;
-if (!board[bestx][besty].hasSp) {
-	cout << bestx << " " << besty << endl;
-	cout << board[bestx][besty].moveArr[moveno].first + bestx << " " << board[bestx][besty].moveArr[moveno].second + besty << endl;
-	cout << "wow wtf is happen" << endl;
-	std::pair<int, int>* legal = board[bestx][besty].moveArr;
-	movePiece(bestx, besty, legal[moveno].first + bestx, legal[moveno].second + besty);
-	if (turn) {
-		lastWhite.second.second.first = legal[moveno].first + bestx;
-		lastWhite.second.second.second = legal[moveno].second + besty;
+	if (!turn) {
+		lastWhite2 = lastWhite;
 	}
 	else {
-		lastBlack.second.second.first = legal[moveno].first + bestx;
-		lastBlack.second.second.second = legal[moveno].second + besty;
+		lastBlack2 = lastBlack;
 	}
-}
-else {
-	if (moveno < board[bestx][besty].lm) {
+	//cout << bestx << ' ' << besty << ' ' << moveno << ' ' << bestscore << endl;
+	if (!board[bestx][besty].hasSp) {
 		cout << bestx << " " << besty << endl;
 		cout << board[bestx][besty].moveArr[moveno].first + bestx << " " << board[bestx][besty].moveArr[moveno].second + besty << endl;
 		cout << "wow wtf is happen" << endl;
-		movePiece(bestx, besty, board[bestx][besty].moveArr[moveno].first + bestx, board[bestx][besty].moveArr[moveno].second + besty);
-		cout << bestx << " " << besty << endl;
-		if (turn) {
-			lastWhite.second.second.first = board[bestx][besty].moveArr[moveno].first + bestx;
-			lastWhite.second.second.second = board[bestx][besty].moveArr[moveno].second + besty;
+		std::pair<int, int>* legal = board[bestx][besty].moveArr;
+		movePiece(bestx, besty, legal[moveno].first + bestx, legal[moveno].second + besty);
+		if (!turn) {
+			lastWhite.second.second.first = legal[moveno].first + bestx;
+			lastWhite.second.second.second = legal[moveno].second + besty;
 		}
 		else {
-			lastBlack.second.second.first = board[bestx][besty].moveArr[moveno].first + bestx;
-			lastBlack.second.second.second = board[bestx][besty].moveArr[moveno].second + besty;
+			lastBlack.second.second.first = legal[moveno].first + bestx;
+			lastBlack.second.second.second = legal[moveno].second + besty;
 		}
-		//sleep(5);
 	}
 	else {
-		cout << bestx << " " << besty << endl;
-		cout << board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx << " " << board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
-		cout << "wow wtf is happen" << endl;
-		movePiece(bestx, besty, board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx, board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty);
-		cout << bestx << " " << besty << endl;
-		if (turn) {
-
-			lastWhite.second.second.first = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx;
-			lastWhite.second.second.second = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
+		if (moveno < board[bestx][besty].lm) {
+			cout << bestx << " " << besty << endl;
+			cout << board[bestx][besty].moveArr[moveno].first + bestx << " " << board[bestx][besty].moveArr[moveno].second + besty << endl;
+			cout << "wow wtf is happen" << endl;
+			movePiece(bestx, besty, board[bestx][besty].moveArr[moveno].first + bestx, board[bestx][besty].moveArr[moveno].second + besty);
+			cout << bestx << " " << besty << endl;
+			if (!turn) {
+				lastWhite.second.second.first = board[bestx][besty].moveArr[moveno].first + bestx;
+				lastWhite.second.second.second = board[bestx][besty].moveArr[moveno].second + besty;
+			}
+			else {
+				lastBlack.second.second.first = board[bestx][besty].moveArr[moveno].first + bestx;
+				lastBlack.second.second.second = board[bestx][besty].moveArr[moveno].second + besty;
+			}
+			//sleep(5);
 		}
 		else {
-			lastBlack.second.second.first = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx;
-			lastBlack.second.second.second = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
+			cout << bestx << " " << besty << endl;
+			cout << board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx << " " << board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
+			cout << "wow wtf is happen" << endl;
+			movePiece(bestx, besty, board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx, board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty);
+			cout << bestx << " " << besty << endl;
+			if (!turn) {
+				lastWhite.second.second.first = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx;
+				lastWhite.second.second.second = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
+			}
+			else {
+				lastBlack.second.second.first = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx;
+				lastBlack.second.second.second = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
+			}
+			//sleep(5);
 		}
-		//sleep(5);
 	}
-}
-if (turn) {
-	lastWhite.first.first = board[bestx][besty];
-	lastWhite.first.second.first = bestx;
-	lastWhite.first.second.second = besty;
-	lastWhite.second.first = board[bestx][besty];
+	if (!turn) {
+		lastWhite.first.first = board[bestx][besty];
+		lastWhite.first.second.first = bestx;
+		lastWhite.first.second.second = besty;
+		lastWhite.second.first = board[bestx][besty];
 
-}
-else {
-	lastBlack.first.first = board[bestx][besty];
-	lastBlack.first.second.first = bestx;
-	lastBlack.first.second.second = besty;
-	lastBlack.second.first = board[bestx][besty];
-}
+	}
+	else {
+		lastBlack.first.first = board[bestx][besty];
+		lastBlack.first.second.first = bestx;
+		lastBlack.first.second.second = besty;
+		lastBlack.second.first = board[bestx][besty];
+	}
 }
 
 bool Board::deprecatedMakeMove() {
