@@ -333,123 +333,52 @@ void Board::makeMove() {
 	int moveno = 0;
 	int bestscore = -100;
 
-	for (int x = 0; x < 8; x++) {
-		for (int y = 0; y < 8; y++) {
-			if (board[x][y].type == turn) {
-				if (!board[x][y].hasSp) {
-					std::pair<int, int>* legal = board[x][y].moveArr;
-					//cout << "limit: " << board[x][y].lm << endl;
-					for (int a = 0; a < board[x][y].lm; a++) {
-						//cout << "regular" << endl;
-						int x2 = legal[a].first + x;
-						int y2 = legal[a].second + y;
-						if (!turn) {
-							if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x&&lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
-								if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-									if (legalMove(x, y, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y)) {
-										//cout << "better move found!" << endl;
-										bestx = x;
-										besty = y;
-										moveno = a;
-										bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-										//cout << "best score: " << bestscore << endl;
-									}
-								}
-							}
-						}
-						else {
-							if (!(lastBlack2.first.first.ident == board[x][y].ident && lastBlack2.first.second.first == x&&lastBlack2.first.second.second == y&&lastBlack2.second.second.first == x2&&lastBlack.second.second.second == y2)) {
-								if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-									if (legalMove(x, y, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y)) {
-										//cout << "better move found!" << endl;
-										bestx = x;
-										besty = y;
-										moveno = a;
-										bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-										//cout << "best score: " << bestscore << endl;
-									}
-								}
-
-							}
-						}
-					}
-				}
-
-				else {
-					for (int a = 0; a < board[x][y].lm + board[x][y].sp; a++) {
-						if (a < board[x][y].lm)
-						{
-							//cout << "reg but has sp" << endl;
-							int x2 = board[x][y].moveArr[a].first + x;
-							int y2 = board[x][y].moveArr[a].second + y;
-							if (!turn) {
-								if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x&&lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
-									if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-										if (legalMove(x, y, x2, y2)) {
-											//cout << "better non-sp found!" << endl;
-											bestx = x;
-											besty = y;
-											moveno = a;
-											bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-											//cout << "best score: " << bestscore << endl;
-										}
-									}
-								}
-							}
-							else {
-								if (!(lastBlack2.first.first.ident == board[x][y].ident && lastBlack2.first.second.first == x&&lastBlack2.first.second.second == y&&lastBlack2.second.second.first == x2&&lastBlack.second.second.second == y2)) {
-									if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-										if (legalMove(x, y, x2, y2)) {
-											//cout << "better non-sp found!" << endl;
-											bestx = x;
-											besty = y;
-											moveno = a;
-											bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-											//cout << "best score: " << bestscore << endl;
-										}
-									}
-								}
-							}
-						}
-						else {
-							//cout << "sp" << endl;
-							int x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
-							int y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
-							if (!turn) {
-								if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x&&lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
-
-									if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-										if (legalMove(x, y, x2, y2)) {
-											//cout << "better sp found!" << endl;
-											bestx = x;
-											besty = y;
-											moveno = a;
-											bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-											//cout << "best score: " << bestscore << endl;
-										}
-									}
-								}
-							}
-							else {
-								if (!(lastBlack2.first.first.ident == board[x][y].ident && lastBlack2.first.second.first == x&&lastBlack2.first.second.second == y&&lastBlack2.second.second.first == x2&&lastBlack.second.second.second == y2)) {
-									if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
-										if (legalMove(x, y, x2, y2)) {
-											//cout << "better sp found!" << endl;
-											bestx = x;
-											besty = y;
-											moveno = a;
-											bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-											//cout << "best score: " << bestscore << endl;
-										}
-									}
-								}
-							}
+	for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn) {
+		//cout << "limit: " << board[x][y].lm << endl;
+		for (int a = 0; a < board[x][y].lm + board[x][y].sp; a++) {
+			//cout << "regular" << endl;
+			int x2, y2;
+			if(a < board[x][y].lm) {
+				x2 = board[x][y].moveArr[a].first + x;
+				y2 = board[x][y].moveArr[a].second + y;
+			}
+			else {
+				x2 = board[x][y].spMoveArr[a].first + x;
+				y2 = board[x][y].spMoveArr[a].second + y;
+			}
+			if (!turn) {
+				if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x && lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
+					if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+						if (legalMove(x, y, x2, y2)) {
+							//cout << "better move found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
+							//cout << "best score: " << bestscore << endl;
 						}
 					}
 				}
 			}
-		}
+			else {
+				if (!(lastBlack2.first.first.ident == board[x][y].ident && lastBlack2.first.second.first == x&&lastBlack2.first.second.second == y&&lastBlack2.second.second.first == x2&&lastBlack.second.second.second == y2)) {
+					if (value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y) > bestscore) {
+						if (legalMove(x, y, x2, y2)) {
+							//cout << "better move found!" << endl;
+							bestx = x;
+							besty = y;
+							moveno = a;
+							bestscore = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
+							//cout << "best score: " << bestscore << endl;
+						}
+					}
+
+				}
+			}
+		}		
 	}
+	std::cout << "h" << std::endl;
+	std::cout << bestx << " " << besty << std::endl;
 	if (!turn) {
 		lastWhite2 = lastWhite;
 	}

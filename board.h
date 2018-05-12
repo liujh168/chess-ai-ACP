@@ -7,11 +7,11 @@
 class Board {
 	private:
 		Piece board[8][8];
-		std::pair<std::pair<Piece, std::pair<int, int>>, std::pair<Piece, std::pair<int, int>>> undo;
-		std::pair<std::pair<Piece, std::pair<int, int>>, std::pair<Piece, std::pair<int, int>>> lastBlack;
-		std::pair<std::pair<Piece, std::pair<int, int>>, std::pair<Piece, std::pair<int, int>>> lastWhite;
-		std::pair<std::pair<Piece, std::pair<int, int>>, std::pair<Piece, std::pair<int, int>>> lastBlack2;
-		std::pair<std::pair<Piece, std::pair<int, int>>, std::pair<Piece, std::pair<int, int>>> lastWhite2;
+		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > undo;
+		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > lastBlack;
+		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > lastWhite;
+		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > lastBlack2;
+		std::pair<std::pair<Piece, std::pair<int, int> >, std::pair<Piece, std::pair<int, int> > > lastWhite2;
 		bool msg = true;
 	public:
 		Player white;
