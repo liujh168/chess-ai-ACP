@@ -199,7 +199,7 @@ Bishop::Bishop(bool side) {
 }
 
 King::King() {
-	weight = 1,000,000;
+	weight = 10000;
 	ident = 'K';
 	isInit = true;
 	type = 0;
@@ -218,7 +218,7 @@ King::King() {
 }
 
 King::King(bool side) {
-	weight = 1,000,000;
+	weight = 10000;
 	ident = 'K';
 	isInit = true;
 	type = side;
