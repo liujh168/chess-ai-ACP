@@ -70,6 +70,7 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 		undo.second.second.second = y2;
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
+		if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
 		return true;
 	}
 	return false;
@@ -306,25 +307,22 @@ bool Board::isCheckmate(bool player) {
 	for (int x = 0; x < 8; x++) {
 		for (int y = 0; y < 8; y++) {
 			if (board[x][y].ident != '*' && board[x][y].type == player) for (int z = 0; z < board[x][y].lm + board[x][y].sp; z++) {
+				int x2, y2;
 				if (z < board[x][y].lm) {
-					if (movePiece(x, y, x + board[x][y].moveArr[z].first, y + board[x][y].moveArr[z].second)) {
-						if (!isCheck(player)) {
-							undoMove();
-							msg = h;
-							return false;
-						}
-						undoMove();
-					}
+					x2 = x + board[x][y].moveArr[z].first;
+					y2 = y + board[x][y].moveArr[z].second;
 				}
-				else if (board[x][y].hasSp) {
-					if (movePiece(x, y, x + board[x][y].spMoveArr[z - board[x][y].lm].first, y + board[x][y].spMoveArr[z - board[x][y].lm].second)) {
-						if (!isCheck(player)) {
-							undoMove();
-							msg = h;
-							return false;
-						}
+				else {
+					x2 = x + board[x][y].moveArr[z - board[x][y].lm].first;
+					y2 = y + board[x][y].moveArr[z - board[x][y].lm].second;
+				}
+				if (movePiece(x, y, x2, y2)) {
+					if (!isCheck(player)) {
 						undoMove();
+						msg = h;
+						return false;
 					}
+					undoMove();
 				}
 			}
 		}
