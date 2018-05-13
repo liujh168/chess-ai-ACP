@@ -213,7 +213,6 @@ void Board::readBoard() {
 	string* temp = new string[8];
 	ifstream out("output.txt");
 	int k = 0;
-	cout << "testing";
 	while (!out.eof() && k < 8) {
 		getline(out, temp[k]); // read the next line into the next string
 		++k;
@@ -253,8 +252,8 @@ void Board::readBoard() {
 		}
 		//cout << endl;
 	}
-	free(temp);
-	printBoard();
+	//free(temp);
+	//printBoard();
 
 }
 
