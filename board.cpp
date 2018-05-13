@@ -355,7 +355,7 @@ void Board::makeMove() {
 			}
 			if(!legalMove(x, y, x2, y2)) continue;
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-			int score = minimax(2, true);
+			int score = minimax(2, true, -32767, 32767);
 			if (!turn) {
 				if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x && lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
 					if (score > bestscore) {
@@ -483,7 +483,7 @@ void Board::undoMove() {
 	board[undo.second.second.first][undo.second.second.second] = undo.second.first;
 }
 
-int Board::minimax(int depth, bool isMax) {
+int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 	if(depth == 0) {
 		//if(-evaluateBoard() != 0) cout << -evaluateBoard() << ' ';
 		return -evaluateBoard();
@@ -507,10 +507,13 @@ int Board::minimax(int depth, bool isMax) {
 				Piece p2 = board[x2][y2];
 				board[x2][y2] = board[x][y];
 				board[x][y] = Piece();
-				bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax)):min(bestscore, minimax(depth-1, !isMax));
+				bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax, alpha, beta)):min(bestscore, minimax(depth-1, !isMax, alpha, beta));
 				turn = !turn;
 				board[x][y] = p1;
 				board[x2][y2] = p2;
+				if(isMax) alpha = max(bestscore, alpha);
+				else beta = min(bestscore, beta);
+				if(beta <= alpha) break;
 			}
 		}
 		return bestscore;
