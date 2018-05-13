@@ -337,7 +337,7 @@ void Board::makeMove() {
 	int bestx = 0;
 	int besty = 0;
 	int moveno = 0;
-	int bestscore = -32767;
+	int bestscore = turn ? -32767:32767;
 	std::pair<std::pair<int, int>, int>* moves;
 	moves = new std::pair<std::pair<int, int>, int>[200];
 	int msize = 0;
@@ -356,37 +356,33 @@ void Board::makeMove() {
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
 			int score = minimax(2, turn, -32767, 32767);
 			if (!turn) {
-				if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x && lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
-					if (score > bestscore) {
-						moves[0].first.first = x;
-						moves[0].first.second = y;
-						moves[0].second = a;
-						msize = 1;
-						bestscore = score;
-					}
-					else if (score == bestscore) {
-						moves[msize].first.first = x;
-						moves[msize].first.second = y;
-						moves[msize].second = a;
-						msize++;
-					}
+				if (score < bestscore) {
+					moves[0].first.first = x;
+					moves[0].first.second = y;
+					moves[0].second = a;
+					msize = 1;
+					bestscore = score;
+				}
+				else if (score == bestscore) {
+					moves[msize].first.first = x;
+					moves[msize].first.second = y;
+					moves[msize].second = a;
+					msize++;
 				}
 			}
 			else {
-				if (!(lastBlack2.first.first.ident == board[x][y].ident && lastBlack2.first.second.first == x&&lastBlack2.first.second.second == y&&lastBlack2.second.second.first == x2&&lastBlack.second.second.second == y2)) {
-					if (score > bestscore) {
-						moves[0].first.first = x;
-						moves[0].first.second = y;
-						moves[0].second = a;
-						msize = 1;
-						bestscore = score;
-					}
-					else if (score == bestscore) {
-						moves[msize].first.first = x;
-						moves[msize].first.second = y;
-						moves[msize].second = a;
-						msize++;
-					}
+				if (score > bestscore) {
+					moves[0].first.first = x;
+					moves[0].first.second = y;
+					moves[0].second = a;
+					msize = 1;
+					bestscore = score;
+				}
+				else if (score == bestscore) {
+					moves[msize].first.first = x;
+					moves[msize].first.second = y;
+					moves[msize].second = a;
+					msize++;
 				}
 			}
 		}		
@@ -406,24 +402,6 @@ void Board::makeMove() {
 		y2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
 	}
 	movePiece(bestx, besty, x2, y2);
-	if (!turn) {
-		lastWhite2 = lastWhite;
-		lastWhite.second.second.first = x2;
-		lastWhite.second.second.second = y2;
-		lastWhite.first.first = board[bestx][besty];
-		lastWhite.first.second.first = bestx;
-		lastWhite.first.second.second = besty;
-		lastWhite.second.first = board[bestx][besty];
-	}
-	else {
-		lastBlack2 = lastBlack;
-		lastBlack.second.second.first = x2;
-		lastBlack.second.second.second = y2;
-		lastBlack.first.first = board[bestx][besty];
-		lastBlack.first.second.first = bestx;
-		lastBlack.first.second.second = besty;
-		lastBlack.second.first = board[bestx][besty];
-	}
 }
 
 void Board::promotion(int f, int g) {
@@ -506,6 +484,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 				Piece p2 = board[x2][y2];
 				board[x2][y2] = board[x][y];
 				board[x][y] = Piece();
+				if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
 				bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax, alpha, beta)):min(bestscore, minimax(depth-1, !isMax, alpha, beta));
 				turn = !turn;
 				board[x][y] = p1;
