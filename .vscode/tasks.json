@@ -2,30 +2,32 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "run testcpp",
+            "label": "run",
             "type": "shell",
             "command": "python",
             "args": [
                 "app.py"
             ],
             "group": {
-                "kind": "build",
+                "kind": "test",
                 "isDefault": true
             },
             "problemMatcher": []
         },
         {
-            "label": "run testcpp",
+            "label": "compile",
             "type": "shell",
             "command": "g++",
             "args": [
                 "main_gui.cpp",
                 "board.cpp",
                 "player.cpp",
-                "piece.cpp"
+                "piece.cpp",
+                "weight.cpp",
+                "-g"
             ],
             "group": {
-                "kind": "test",
+                "kind": "build",
                 "isDefault": true
             },
             "problemMatcher": []
