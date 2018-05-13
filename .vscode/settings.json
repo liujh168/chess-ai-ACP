@@ -1,7 +1,3 @@
 {
-    "python.linting.pylintEnabled": false,
-    "files.associations": {
-        "iostream": "cpp",
-        "fstream": "cpp"
-    }
+    "python.linting.pylintEnabled": false
 }
