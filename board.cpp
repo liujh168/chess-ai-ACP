@@ -252,7 +252,7 @@ void Board::readBoard() {
 		}
 		//cout << endl;
 	}
-	//free(temp);
+	delete[] temp;
 	//printBoard();
 
 }
@@ -339,7 +339,7 @@ void Board::makeMove() {
 	int moveno = 0;
 	int bestscore = -32767;
 	std::pair<std::pair<int, int>, int>* moves;
-	moves = (std::pair<std::pair<int, int>, int>*)malloc(20*sizeof moves);
+	moves = new std::pair<std::pair<int, int>, int>[20];
 	int msize = 0;
 	for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
 		for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); a++) {
@@ -395,7 +395,7 @@ void Board::makeMove() {
 	bestx = moves[r].first.first;
 	besty = moves[r].first.second;
 	moveno = moves[r].second;
-	free(moves);
+	delete[] moves;
 	int x2, y2;
 	if(moveno < board[bestx][besty].lm) {
 		x2 = board[bestx][besty].moveArr[moveno].first + bestx;
@@ -518,6 +518,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 		return bestscore;
 	}
 }
+
 int Board::evaluateBoard() {
 	int total = 0;
 	for(int x = 0; x < 8; x++) for(int y = 0; y < 8; y++) {
