@@ -33,6 +33,8 @@ class Board {
 		int value(char piece, bool colour, int x, int y);
 		void undoMove();
 		int turnCount;
+		int minimax(int depth, bool isMax);
+		int evaluateBoard();
 };
 
 #endif /* BOARD_H */

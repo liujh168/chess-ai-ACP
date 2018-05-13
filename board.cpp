@@ -86,7 +86,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 		Piece p2 = board[x2][y2];
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
-		if (isCheck(board[x2][y2].type)) {
+		if (isCheck(turn)) {
 			board[x1][y1] = p1;
 			board[x2][y2] = p2;
 			if (msg) cout << "Moving Piece puts you in check!" << endl;
@@ -332,6 +332,7 @@ bool Board::isCheckmate(bool player) {
 }
 
 void Board::makeMove() {
+	cout << 'a';
 	int bestx = 0;
 	int besty = 0;
 	int moveno = 0;
@@ -351,7 +352,8 @@ void Board::makeMove() {
 				y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
 			}
 			if(!legalMove(x, y, x2, y2)) continue;
-			int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
+			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
+			int score = minimax(2, true);
 			if (!turn) {
 				if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x && lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
 					if (score > bestscore) {
@@ -400,7 +402,7 @@ void Board::makeMove() {
 	else {
 		x2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx;
 		y2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
-	}	
+	}
 	movePiece(bestx, besty, x2, y2);
 	if (!turn) {
 		lastWhite2 = lastWhite;
@@ -496,4 +498,45 @@ int Board::value(char piece, bool color, int x, int y) {
 void Board::undoMove() {
 	board[undo.first.second.first][undo.first.second.second] = undo.first.first;
 	board[undo.second.second.first][undo.second.second.second] = undo.second.first;
+}
+
+int Board::minimax(int depth, bool isMax) {
+	if(depth == 0) {
+		//if(-evaluateBoard() != 0) cout << -evaluateBoard() << ' ';
+		return -evaluateBoard();
+	}
+	else {
+		int bestscore = isMax ? -32767:32767;
+		for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
+			for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); a++) {
+				int x2, y2;
+				if(a < board[x][y].lm) {
+					x2 = board[x][y].moveArr[a].first + x;
+					y2 = board[x][y].moveArr[a].second + y;
+				}
+				else {
+					x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
+					y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
+				}
+				if(!legalMove(x, y, x2, y2)) continue;
+				turn = !turn;
+				Piece p1 = board[x][y];
+				Piece p2 = board[x2][y2];
+				board[x2][y2] = board[x][y];
+				board[x][y] = Piece();
+				bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax)):min(bestscore, minimax(depth-1, !isMax));
+				turn = !turn;
+				board[x][y] = p1;
+				board[x2][y2] = p2;
+			}
+		}
+		return bestscore;
+	}
+}
+int Board::evaluateBoard() {
+	int total = 0;
+	for(int x = 0; x < 8; x++) for(int y = 0; y < 8; y++) {
+		total += board[x][y].weight * (board[x][y].type ? -1:1);
+	}
+	return total;
 }

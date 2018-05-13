@@ -9,6 +9,7 @@
 using namespace std;
 
 int main() {
+	ios_base::sync_with_stdio(false);
 	srand(time(NULL));
 	Board b(Player(true), Player(true));
 	cout << "test";
@@ -44,7 +45,7 @@ int main() {
 			}
 		}
 		b.turn = !b.turn;
-		sleep(1.5);
+		sleep(.5);
 		system("CLS");
 		b.printBoard();
 	}
