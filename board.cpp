@@ -69,8 +69,8 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 		undo.second.second.first = x2;
 		undo.second.second.second = y2;
 		if(board[x2][y2].ident != '*') {
-			free(board[x2][y2].moveArr);
-			if(board[x2][y2].hasSp) free(board[x2][y2].spMoveArr);
+			delete [] board[x2][y2].moveArr;
+			if(board[x2][y2].hasSp) delete [] board[x2][y2].spMoveArr;
 		}
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
@@ -339,7 +339,7 @@ void Board::makeMove() {
 	int moveno = 0;
 	int bestscore = -32767;
 	std::pair<std::pair<int, int>, int>* moves;
-	moves = new std::pair<std::pair<int, int>, int>[20];
+	moves = new std::pair<std::pair<int, int>, int>[200];
 	int msize = 0;
 	for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
 		for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); a++) {
@@ -354,7 +354,7 @@ void Board::makeMove() {
 			}
 			if(!legalMove(x, y, x2, y2)) continue;
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-			int score = minimax(2, true, -32767, 32767);
+			int score = minimax(2, turn, -32767, 32767);
 			if (!turn) {
 				if (!(lastWhite2.first.first.ident == board[x][y].ident && lastWhite2.first.second.first == x && lastWhite2.first.second.second == y&&lastWhite2.second.second.first == x2&&lastWhite.second.second.second == y2)) {
 					if (score > bestscore) {
@@ -484,7 +484,7 @@ void Board::undoMove() {
 
 int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 	if(depth == 0) {
-		//if(-evaluateBoard() != 0) cout << -evaluateBoard() << ' ';
+		//cout << -evaluateBoard() << ' ';
 		return -evaluateBoard();
 	}
 	else {
@@ -522,7 +522,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 int Board::evaluateBoard() {
 	int total = 0;
 	for(int x = 0; x < 8; x++) for(int y = 0; y < 8; y++) {
-		total += board[x][y].weight * (board[x][y].type ? -1:1);
+		total += board[x][y].weight * (board[x][y].type ? 1:-1);
 	}
 	return total;
 }
