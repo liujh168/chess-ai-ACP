@@ -16,7 +16,6 @@ class Piece {
 		bool hasSp;
 		Piece();
 		Piece(bool side); //Sets the colour of the piece
-		std::pair<int, int>* move(); //returns a pointer to an array of potential moves that a piece can make with each pair telling the computer the x steps and the y steps that a piece could move in
 };
 
 class Pawn : public Piece {

@@ -68,6 +68,10 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 		undo.first.second.second = y1;
 		undo.second.second.first = x2;
 		undo.second.second.second = y2;
+		if(board[x2][y2].ident != '*') {
+			free(board[x2][y2].moveArr);
+			if(board[x2][y2].hasSp) free(board[x2][y2].spMoveArr);
+		}
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
 		if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
@@ -249,6 +253,7 @@ void Board::readBoard() {
 		}
 		//cout << endl;
 	}
+	free(temp);
 	printBoard();
 
 }
@@ -330,7 +335,6 @@ bool Board::isCheckmate(bool player) {
 }
 
 void Board::makeMove() {
-	cout << 'a';
 	int bestx = 0;
 	int besty = 0;
 	int moveno = 0;
@@ -392,6 +396,7 @@ void Board::makeMove() {
 	bestx = moves[r].first.first;
 	besty = moves[r].first.second;
 	moveno = moves[r].second;
+	free(moves);
 	int x2, y2;
 	if(moveno < board[bestx][besty].lm) {
 		x2 = board[bestx][besty].moveArr[moveno].first + bestx;
@@ -420,26 +425,6 @@ void Board::makeMove() {
 		lastBlack.first.second.second = besty;
 		lastBlack.second.first = board[bestx][besty];
 	}
-}
-
-bool Board::deprecatedMakeMove() {
-	int x = rand() % 8;
-	int y = rand() % 8;
-
-	if (board[x][y].type == turn) {
-		if (!board[x][y].hasSp) {
-			std::pair<int, int>* legal = board[x][y].moveArr;
-			int a = rand() % board[x][y].lm;
-			return movePiece(x, y, legal[a].first + x, legal[a].second + y);
-		}
-		else {
-			int a = rand() % (board[x][y].lm + board[x][y].sp);
-			if (a <= board[x][y].lm) return movePiece(x, y, board[x][y].moveArr[a].first + x, board[x][y].moveArr[a].second + y);
-			else return movePiece(x, y, board[x][y].spMoveArr[a - board[x][y].lm].first + x, board[x][y].spMoveArr[a - board[x][y].lm].second + y);
-		}
-	}
-
-	return false;
 }
 
 void Board::promotion(int f, int g) {

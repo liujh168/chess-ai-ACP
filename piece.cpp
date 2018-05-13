@@ -6,15 +6,8 @@ using namespace std;
 Piece::Piece() {
 	weight = 0;
 	ident = '*';
-	moveArr = (std::pair<int, int>*)std::calloc(1, sizeof moveArr);
-	moveArr[0].first = 0;
-	moveArr[0].second = 0;
 	lm = 1;
 	hasSp = false;
-}
-
-std::pair<int, int>* Piece::move() {
-	return moveArr;
 }
 
 Pawn::Pawn() {
@@ -22,10 +15,10 @@ Pawn::Pawn() {
 	ident = 'P';
 	isInit = true;
 	type = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(1, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = -1;
-	spMoveArr = (std::pair<int, int>*)std::calloc(3, sizeof spMoveArr);
+	spMoveArr = (std::pair<int, int>*)std::malloc(3*sizeof spMoveArr);
 	spMoveArr[0].first = -1;
 	spMoveArr[0].second = -1;
 	spMoveArr[1].first = 1;
@@ -45,10 +38,10 @@ Pawn::Pawn(bool side) {
 	int temp;
 	if(type) temp = -1;
 	else temp = 1;
-	moveArr = (std::pair<int, int>*)std::calloc(1, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(sizeof moveArr);
 	moveArr[0].first = 0;
 	moveArr[0].second = temp;
-	spMoveArr = (std::pair<int, int>*)std::calloc(3, sizeof spMoveArr);
+	spMoveArr = (std::pair<int, int>*)std::malloc(3*sizeof spMoveArr);
 	spMoveArr[0].first = -1;
 	spMoveArr[0].second = temp;
 	spMoveArr[1].first = 1;
@@ -66,7 +59,7 @@ Rook::Rook() {
 	isInit = true;
 	type = 0;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(28, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
@@ -86,7 +79,7 @@ Rook::Rook(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(28, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 			if(x == 0) x++;
 			moveArr[z].first = 0;
@@ -106,7 +99,7 @@ Knight::Knight() {
 	isInit = true;
 	type = 0;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(8, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int y = -1; y < 2; y++) {
 		for(int x = -1; x < 2; x++) {
 			moveArr[z].first = 2 * x;
@@ -135,7 +128,7 @@ Knight::Knight(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(8, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int y = -1; y < 2; y++) {
 		for(int x = -1; x < 2; x++) {
 			moveArr[z].first = 2 * x;
@@ -164,7 +157,7 @@ Bishop::Bishop() {
 	isInit = true;
 	type = 0;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(28, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -184,7 +177,7 @@ Bishop::Bishop(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(28, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(28*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -198,13 +191,14 @@ Bishop::Bishop(bool side) {
 	hasSp = false;
 }
 
+
 King::King() {
 	weight = 10000;
 	ident = 'K';
 	isInit = true;
 	type = 0;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(8, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int x = -1; x < 2; x++) {
 		for(int y = -1; y < 2; y++) {
 			if(x == y && y == 0) y++;
@@ -223,7 +217,7 @@ King::King(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(8, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(8*sizeof moveArr);
 	for(int x = -1; x < 2; x++) {
 		for(int y = -1; y < 2; y++) {
 			if(x == y && y == 0) y++;
@@ -242,7 +236,7 @@ Queen::Queen() {
 	isInit = true;
 	type = 0;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(56, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(56*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -271,7 +265,7 @@ Queen::Queen(bool side) {
 	isInit = true;
 	type = side;
 	int z = 0;
-	moveArr = (std::pair<int, int>*)std::calloc(56, sizeof moveArr);
+	moveArr = (std::pair<int, int>*)std::malloc(56*sizeof moveArr);
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
@@ -293,3 +287,4 @@ Queen::Queen(bool side) {
 	lm = 56;
 	hasSp = false;
 }
+
