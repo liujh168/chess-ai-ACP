@@ -12,7 +12,6 @@ int main() {
 	ios_base::sync_with_stdio(false);
 	srand(time(NULL));
 	Board b(Player(true), Player(true));
-	cout << "test";
 	string input;
 	bool playing = true;
 	bool checkm8 = false;
