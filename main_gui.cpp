@@ -5,10 +5,13 @@
 #include <string>
 #include <unistd.h>
 #include <fstream>
+#include <time.h>
 
 using namespace std;
 
 int main() {
+	ios_base::sync_with_stdio(false);
+	srand(time(NULL));
 	Board b(Player(false), Player(true));
 	b.readBoard();
 	//b.printBoard();
@@ -30,8 +33,9 @@ int main() {
 	int y2 = input.at(1) - 49;
 	mov = b.movePiece(x1, y1, x2, y2);
 	//b.promotion(x2, y2);
+	if(mov){
 	b.turn = 1;
-	b.makeMove();
+	b.makeMove();}
 	//system("CLS");
 	b.writeBoard();
 	return 0;
