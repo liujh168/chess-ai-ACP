@@ -20,7 +20,6 @@ class Board {
 		void writeBoard();
 		void readBoard();
 		bool isCheck(bool player); //tests for checkage
-		bool isCheck(int x1, int y1, bool player);
 		bool isCheckmate(bool player);
 		bool legalMove(int x1, int y1, int x2, int y2);
 		void makeMove();

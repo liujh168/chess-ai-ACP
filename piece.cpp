@@ -100,23 +100,19 @@ Knight::Knight() {
 	type = 0;
 	int z = 0;
 	moveArr = new std::pair<int, int>[8];
-	for(int y = -1; y < 2; y++) {
-		for(int x = -1; x < 2; x++) {
+	for(int y = -1; y < 2; y+=2) {
+		for(int x = -1; x < 2; x+=2) {
 			moveArr[z].first = 2 * x;
 			moveArr[z].second = y;
 			z++;
-			x++;
 		}
-		y++;
 	}
-	for(int y = -1; y < 2; y++) {
-		for(int x = -1; x < 2; x++) {
+	for(int y = -1; y < 2; y+=2) {
+		for(int x = -1; x < 2; x+=2) {
 			moveArr[z].first = y;
 			moveArr[z].second = 2 * x;
 			z++;
-			x++;
 		}
-		y++;
 	}
 	lm = 8;
 	hasSp = false;
@@ -129,23 +125,19 @@ Knight::Knight(bool side) {
 	type = side;
 	int z = 0;
 	moveArr = new std::pair<int, int>[8];
-	for(int y = -1; y < 2; y++) {
-		for(int x = -1; x < 2; x++) {
+	for(int y = -1; y < 2; y+=2) {
+		for(int x = -1; x < 2; x+=2) {
 			moveArr[z].first = 2 * x;
 			moveArr[z].second = y;
 			z++;
-			x++;
 		}
-		y++;
 	}
-	for(int y = -1; y < 2; y++) {
-		for(int x = -1; x < 2; x++) {
+	for(int y = -1; y < 2; y+=2) {
+		for(int x = -1; x < 2; x+=2) {
 			moveArr[z].first = y;
 			moveArr[z].second = 2 * x;
 			z++;
-			x++;
 		}
-		y++;
 	}
 	lm = 8;
 	hasSp = false;

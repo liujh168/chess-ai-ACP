@@ -260,6 +260,8 @@ void Board::readBoard() {
 bool Board::isCheck(bool player) {
 	int x1;
 	int y1;
+	bool h = msg;
+	bool found = false;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			if (board[i][j].ident == 'K' && board[i][j].type == player) {
@@ -267,48 +269,44 @@ bool Board::isCheck(bool player) {
 				y1 = j;
 				i = 8;
 				j = 8;
+				found = true;
 			}
 		}
 	}
+	if(!found) return true;
 	bool t = turn;
 	turn = !player;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if (board[i][j].ident != '*' && board[i][j].type != player) if (legalMove(i, j, x1, y1)) {
+			msg = false;
+			if (board[i][j].ident != '*' && board[i][j].type == turn) if (legalMove(i, j, x1, y1)) {
 				turn = t;
+				if(h) cout << "In check at: " << i << ' ' << j << ' ' << x1 << ' ' << y1 << " ident: " << board[i][j].ident <<endl;
+				msg = h;
 				return true;
 			}
 		}
 	}
-	turn = t;
-	return false;
-}
-
-bool Board::isCheck(int x1, int y1, bool player) {
-	bool t = turn;
-	turn = !player;
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			if (board[i][j].type != player) if (legalMove(i, j, x1, y1)) {
-				cout << i << " " << j << " " << x1 << " " << y1 << endl;
-				turn = t;
-				return true;
-			}
-		}
-	}
+	msg = h;
 	turn = t;
 	return false;
 }
 
 bool Board::isCheckmate(bool player) {
-	bool h = msg;
-	msg = false;
+	cout << "Checking for checkmate..." << endl;
+	bool h = false;
+	bool t = turn;
+	turn = player;
+	msg = true;
 	int x1;
 	int y1;
-	if (!isCheck(player)) { msg = h; return false; }
+	cout << "Checking for initial check..." << endl;
+	if (!isCheck(player)) { cout << "King is not in check" << endl; turn = t; msg = false; return false; }
+	cout << player << " King in check" << endl;
 	for (int x = 0; x < 8; x++) {
 		for (int y = 0; y < 8; y++) {
-			if (board[x][y].ident != '*' && board[x][y].type == player) for (int z = 0; z < board[x][y].lm + board[x][y].sp; z++) {
+			if (board[x][y].ident != '*' && board[x][y].type == player) for (int z = 0; z < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); z++) {
+				//cout << "Checking " << x << ' ' << y  << " move no. " << z << "..." << endl;
 				int x2, y2;
 				if (z < board[x][y].lm) {
 					x2 = x + board[x][y].moveArr[z].first;
@@ -318,28 +316,34 @@ bool Board::isCheckmate(bool player) {
 					x2 = x + board[x][y].moveArr[z - board[x][y].lm].first;
 					y2 = y + board[x][y].moveArr[z - board[x][y].lm].second;
 				}
-				if (movePiece(x, y, x2, y2)) {
+				if(movePiece(x, y, x2, y2)) {
 					if (!isCheck(player)) {
 						undoMove();
 						msg = h;
+						cout << "Nope" << endl;
+						turn = t;
 						return false;
 					}
 					undoMove();
 				}
+				cout << "Still in check" << endl;
 			}
 		}
 	}
 	msg = h;
+	cout << "Yup" << endl;
+	turn = t;
 	return true;
 }
 
 void Board::makeMove() {
+	cout << "Making move..." << endl;
 	int bestx = 0;
 	int besty = 0;
 	int moveno = 0;
 	int bestscore = turn ? -32767:32767;
 	std::pair<std::pair<int, int>, int>* moves;
-	moves = new std::pair<std::pair<int, int>, int>[200];
+	moves = new std::pair<std::pair<int, int>, int>[100];
 	int msize = 0;
 	for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
 		for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); a++) {
@@ -362,6 +366,7 @@ void Board::makeMove() {
 					moves[0].second = a;
 					msize = 1;
 					bestscore = score;
+					cout << score << endl;
 				}
 				else if (score == bestscore) {
 					moves[msize].first.first = x;
@@ -377,6 +382,7 @@ void Board::makeMove() {
 					moves[0].second = a;
 					msize = 1;
 					bestscore = score;
+					cout << score << endl;
 				}
 				else if (score == bestscore) {
 					moves[msize].first.first = x;
@@ -387,6 +393,7 @@ void Board::makeMove() {
 			}
 		}		
 	}
+	cout << msize << ' ' << bestscore << ' ' << turn;
 	int r = rand() % msize;
 	bestx = moves[r].first.first;
 	besty = moves[r].first.second;
@@ -402,6 +409,7 @@ void Board::makeMove() {
 		y2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
 	}
 	movePiece(bestx, besty, x2, y2);
+	cout << "Move made" << endl;
 }
 
 void Board::promotion(int f, int g) {
@@ -485,7 +493,8 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 				board[x2][y2] = board[x][y];
 				board[x][y] = Piece();
 				if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
-				bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax, alpha, beta)):min(bestscore, minimax(depth-1, !isMax, alpha, beta));
+				if(p2.ident != 'K') bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax, alpha, beta)):min(bestscore, minimax(depth-1, !isMax, alpha, beta));
+				else bestscore = isMax ? max(bestscore, minimax(0, !isMax, alpha, beta)):min(bestscore, minimax(0, !isMax, alpha, beta));
 				turn = !turn;
 				board[x][y] = p1;
 				board[x2][y2] = p2;
