@@ -279,9 +279,19 @@ bool Board::isCheck(bool player) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			msg = false;
-			if (board[i][j].ident != '*' && board[i][j].type == turn) if (legalMove(i, j, x1, y1)) {
+			int a = x1 - i;
+			int b = y1 - j;
+			bool possible = false;
+			if (board[i][j].ident != '*' && board[i][j].type == turn) for(int x = 0; x < board[i][j].lm + (board[i][j].hasSp ? board[i][j].sp:0); x++) {
+				if(x < board[i][j].lm) { if(a == board[i][j].moveArr[x].first && b == board[i][j].moveArr[x].second) { possible = true; break; } }
+				else if(a == board[i][j].spMoveArr[x - board[i][j].lm].first && b == board[i][j].spMoveArr[x - board[i][j].lm].second) {
+					possible = true;
+					break;
+				}
+			}
+			if(!possible) continue;
+			if (legalMove(i, j, x1, y1)) {
 				turn = t;
-				if(h) cout << "In check at: " << i << ' ' << j << ' ' << x1 << ' ' << y1 << " ident: " << board[i][j].ident <<endl;
 				msg = h;
 				return true;
 			}
@@ -297,12 +307,10 @@ bool Board::isCheckmate(bool player) {
 	bool h = false;
 	bool t = turn;
 	turn = player;
-	msg = true;
+	msg = false;
 	int x1;
 	int y1;
-	cout << "Checking for initial check..." << endl;
-	if (!isCheck(player)) { cout << "King is not in check" << endl; turn = t; msg = false; return false; }
-	cout << player << " King in check" << endl;
+	if (!isCheck(player)) { turn = t; msg = false; return false; }
 	for (int x = 0; x < 8; x++) {
 		for (int y = 0; y < 8; y++) {
 			if (board[x][y].ident != '*' && board[x][y].type == player) for (int z = 0; z < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); z++) {
@@ -320,18 +328,15 @@ bool Board::isCheckmate(bool player) {
 					if (!isCheck(player)) {
 						undoMove();
 						msg = h;
-						cout << "Nope" << endl;
 						turn = t;
 						return false;
 					}
 					undoMove();
 				}
-				cout << "Still in check" << endl;
 			}
 		}
 	}
 	msg = h;
-	cout << "Yup" << endl;
 	turn = t;
 	return true;
 }
