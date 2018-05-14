@@ -7,7 +7,7 @@
 #include <fstream>
 #include <typeinfo>
 #include <unistd.h>
-
+#define CAPTURE_VALUE 4;
 using namespace std;
 
 Board::Board() {
@@ -68,10 +68,6 @@ bool Board::movePiece(int x1, int y1, int x2, int y2) {
 		undo.first.second.second = y1;
 		undo.second.second.first = x2;
 		undo.second.second.second = y2;
-		if(board[x2][y2].ident != '*') {
-			delete [] board[x2][y2].moveArr;
-			if(board[x2][y2].hasSp) delete [] board[x2][y2].spMoveArr;
-		}
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
 		if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
@@ -363,7 +359,7 @@ void Board::makeMove() {
 			}
 			if(!legalMove(x, y, x2, y2)) continue;
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-			int score = minimax(2, turn, -32767, 32767);
+			int score = minimax(3, !turn, -32767, 32767);
 			if (!turn) {
 				if (score < bestscore) {
 					moves[0].first.first = x;
@@ -481,7 +477,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 	else {
 		int bestscore = isMax ? -32767:32767;
 		for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
-			for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); a++) {
+			for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:1)-1; a++) {
 				int x2, y2;
 				if(a < board[x][y].lm) {
 					x2 = board[x][y].moveArr[a].first + x;
@@ -515,7 +511,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 int Board::evaluateBoard() {
 	int total = 0;
 	for(int x = 0; x < 8; x++) for(int y = 0; y < 8; y++) {
-		total += board[x][y].weight * (board[x][y].type ? 1:-1);
+		total += board[x][y].weight * (board[x][y].type ? 1:-1)*CAPTURE_VALUE +value(board[x][y].ident,board[x][y].type,x,y)* (board[x][y].type ? 1:-1);
 	}
 	return total;
 }
