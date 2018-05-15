@@ -16,7 +16,8 @@ int main() {
 	bool playing = true;
 	bool checkm8 = false;
 	system("CLS");
-	b.printBoard();
+	b.printBoard();   
+	
 	while(playing && !checkm8) {
 		checkm8 = b.isCheckmate(b.turn);
 		if(checkm8) break;

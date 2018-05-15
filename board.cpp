@@ -278,7 +278,7 @@ bool Board::isCheck(bool player) {
 			int a = x1 - i;
 			int b = y1 - j;
 			bool possible = false;
-			if (board[i][j].ident != '*' && board[i][j].type == turn) for(int x = 0; x < board[i][j].lm + (board[i][j].hasSp ? board[i][j].sp:0); x++) {
+			if (board[i][j].ident != '*' && board[i][j].type == turn) for(int x = 0; x < board[i][j].lm + (board[i][j].hasSp ? board[i][j].sp-1:0); x++) {
 				if(x < board[i][j].lm) { if(a == board[i][j].moveArr[x].first && b == board[i][j].moveArr[x].second) { possible = true; break; } }
 				else if(a == board[i][j].spMoveArr[x - board[i][j].lm].first && b == board[i][j].spMoveArr[x - board[i][j].lm].second) {
 					possible = true;
@@ -309,7 +309,7 @@ bool Board::isCheckmate(bool player) {
 	if (!isCheck(player)) { turn = t; msg = false; return false; }
 	for (int x = 0; x < 8; x++) {
 		for (int y = 0; y < 8; y++) {
-			if (board[x][y].ident != '*' && board[x][y].type == player) for (int z = 0; z < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); z++) {
+			if (board[x][y].ident != '*' && board[x][y].type == player) for (int z = 0; z < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp-1:0); z++) {
 				//cout << "Checking " << x << ' ' << y  << " move no. " << z << "..." << endl;
 				int x2, y2;
 				if (z < board[x][y].lm) {
@@ -347,7 +347,7 @@ void Board::makeMove() {
 	moves = new std::pair<std::pair<int, int>, int>[100];
 	int msize = 0;
 	for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
-		for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:0); a++) {
+		for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp-1:0); a++) {
 			int x2, y2;
 			if(a < board[x][y].lm) {
 				x2 = board[x][y].moveArr[a].first + x;
@@ -359,7 +359,7 @@ void Board::makeMove() {
 			}
 			if(!legalMove(x, y, x2, y2)) continue;
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-			int score = minimax(3, !turn, -32767, 32767);
+			int score = minimax(3, turn, -32767, 32767);
 			if (!turn) {
 				if (score < bestscore) {
 					moves[0].first.first = x;
@@ -477,7 +477,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 	else {
 		int bestscore = isMax ? -32767:32767;
 		for (int x = 0; x < 8; x++) for (int y = 0; y < 8; y++) if (board[x][y].type == turn && board[x][y].ident != '*') {
-			for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp:1)-1; a++) {
+			for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp-1:0); a++) {
 				int x2, y2;
 				if(a < board[x][y].lm) {
 					x2 = board[x][y].moveArr[a].first + x;
@@ -511,7 +511,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 int Board::evaluateBoard() {
 	int total = 0;
 	for(int x = 0; x < 8; x++) for(int y = 0; y < 8; y++) {
-		total += board[x][y].weight * (board[x][y].type ? 1:-1)*CAPTURE_VALUE +value(board[x][y].ident,board[x][y].type,x,y)* (board[x][y].type ? 1:-1);
+		if(board[x][y].ident != '*') total += (1.5*board[x][y].weight + value(board[x][y].ident, board[x][y].type, x, y)) * (board[x][y].type ? 1 : -1);
 	}
 	return total;
 }
