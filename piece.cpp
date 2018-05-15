@@ -223,7 +223,7 @@ King::King(bool side) {
 }
 
 Queen::Queen() {
-	weight = 90;
+	weight = 99;
 	ident = 'Q';
 	isInit = true;
 	type = 0;
@@ -252,7 +252,7 @@ Queen::Queen() {
 }
 
 Queen::Queen(bool side) {
-	weight = 90;
+	weight = 99;
 	ident = 'Q';
 	isInit = true;
 	type = side;
