@@ -95,7 +95,7 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 		board[x1][y1] = p1;
 		board[x2][y2] = p2;
 		if (x1 == x2 && (y1 == 6 || y1 == 1) && board[x2][y2].ident == '*' && abs(y2 - y1) == 2) {
-			if (board[x1][y1 + board[x1][y1].type ? -1 : 1].ident != '*') return false;
+			if (board[x1][y1 + (board[x1][y1].type ? -1 : 1)].ident != '*') return false;
 			return true;
 		}
 		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1) {
