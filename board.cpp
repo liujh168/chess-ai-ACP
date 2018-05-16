@@ -455,12 +455,12 @@ int Board::value(char piece, bool color, int x, int y) {
 		}
 	}
 	switch (piece) {
-	case 'P': return p.pawnArr[7 - x][7 - y];
-	case 'N': return p.knightArr[7 - x][7 - y];
-	case 'K': return p.kingArr[7 - x][7 - y];
-	case 'B': return p.bishopArr[7 - x][7 - y];
-	case 'R': return p.rookArr[7 - x][7 - y];
-	case 'Q': return p.queenArr[7 - x][7 - y];
+	case 'P': return p.pawnArr[7 - x][y];
+	case 'N': return p.knightArr[7 - x][y];
+	case 'K': return p.kingArr[7 - x][y];
+	case 'B': return p.bishopArr[7 - x][y];
+	case 'R': return p.rookArr[7 - x][y];
+	case 'Q': return p.queenArr[7 - x][y];
 	}
 }
 
