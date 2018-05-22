@@ -60,14 +60,16 @@ Board::Board(Player white, Player black) {
 	for (int x = 0; x < 8; x++) board[x][6] = Pawn(true);
 }
 
-bool Board::movePiece(int x1, int y1, int x2, int y2) {
+bool Board::movePiece(int x1, int y1, int x2, int y2, bool storeUndo) {
 	if (legalMove(x1, y1, x2, y2)) {
-		undo.first.first = board[x1][y1];
-		undo.second.first = board[x2][y2];
-		undo.first.second.first = x1;
-		undo.first.second.second = y1;
-		undo.second.second.first = x2;
-		undo.second.second.second = y2;
+		if(storeUndo) {
+			undo.first.first = board[x1][y1];
+			undo.second.first = board[x2][y2];
+			undo.first.second.first = x1;
+			undo.first.second.second = y1;
+			undo.second.second.first = x2;
+			undo.second.second.second = y2;
+		}
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
 		if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
@@ -101,10 +103,10 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1) {
 			if (board[x2][y2].ident != '*') return true;
 			//en passant
-			/*else if ((undo.second.second.first == x1 - 1 || undo.second.second.first == x1 + 1) && (x2 == undo.second.second.first - 1) && undo.first.second.second == 7) {
+			else if ((undo.first.first.ident == 'P' && abs(undo.first.second.second - undo.second.second.second) == 2 && (undo.first.second.second == 1 || undo.first.second.second == 6)) && (x2 == undo.second.second.first && ((y2 == undo.second.second.second-1 && turn) || (y2 == undo.second.second.second + 1 && !turn)))) {
+				board[undo.second.second.first][undo.second.second.second] = Piece();
 				return true;
 			}
-			*/
 			else return false;
 		}
 	}
@@ -320,9 +322,14 @@ bool Board::isCheckmate(bool player) {
 					x2 = x + board[x][y].moveArr[z - board[x][y].lm].first;
 					y2 = y + board[x][y].moveArr[z - board[x][y].lm].second;
 				}
-				if(movePiece(x, y, x2, y2)) {
+				Piece p1 = board[x][y];
+				Piece p2 = board[x2][y2];
+				board[x2][y2] = board[x][y];
+				board[x][y] = Piece();
+				if(movePiece(x, y, x2, y2, false)) {
 					if (!isCheck(player)) {
-						undoMove();
+						board[x][y] = p1;
+						board[x2][y2] = p2;
 						msg = h;
 						turn = t;
 						return false;
@@ -409,7 +416,7 @@ void Board::makeMove() {
 		x2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx;
 		y2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
 	}
-	movePiece(bestx, besty, x2, y2);
+	movePiece(bestx, besty, x2, y2, true);
 	cout << "Move made" << endl;
 }
 
