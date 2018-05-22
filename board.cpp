@@ -324,8 +324,6 @@ bool Board::isCheckmate(bool player) {
 				}
 				Piece p1 = board[x][y];
 				Piece p2 = board[x2][y2];
-				board[x2][y2] = board[x][y];
-				board[x][y] = Piece();
 				if(movePiece(x, y, x2, y2, false)) {
 					if (!isCheck(player)) {
 						board[x][y] = p1;
@@ -334,8 +332,9 @@ bool Board::isCheckmate(bool player) {
 						turn = t;
 						return false;
 					}
-					undoMove();
 				}
+				board[x][y] = p1;
+				board[x2][y2] = p2;
 			}
 		}
 	}
