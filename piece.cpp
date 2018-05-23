@@ -64,9 +64,8 @@ Rook::Rook() {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
 		moveArr[z].second = x;
-		z++;
-		moveArr[z].first = x;
-		moveArr[z].second = 0;
+		moveArr[27-z].first = x;
+		moveArr[27-z].second = 0;
 		z++;
 	}
 	lm = 28;
@@ -84,9 +83,8 @@ Rook::Rook(bool side) {
 			if(x == 0) x++;
 			moveArr[z].first = 0;
 			moveArr[z].second = x;
-			z++;
-			moveArr[z].first = x;
-			moveArr[z].second = 0;
+			moveArr[27-z].first = x;
+			moveArr[27-z].second = 0;
 			z++;
 		}
 	lm = 28;
@@ -154,9 +152,8 @@ Bishop::Bishop() {
 		if(x == 0) x++;
 		moveArr[z].first = x;
 		moveArr[z].second = x;
-		z++;
-		moveArr[z].first = x;
-		moveArr[z].second = -x;
+		moveArr[27-z].first = x;
+		moveArr[27-z].second = -x;
 		z++;
 	}
 	lm = 28;
@@ -174,9 +171,8 @@ Bishop::Bishop(bool side) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
 		moveArr[z].second = x;
-		z++;
-		moveArr[z].first = x;
-		moveArr[z].second = -x;
+		moveArr[27-z].first = x;
+		moveArr[27-z].second = -x;
 		z++;
 	}
 	lm = 28;
@@ -233,18 +229,16 @@ Queen::Queen() {
 		if(x == 0) x++;
 		moveArr[z].first = x;
 		moveArr[z].second = x;
-		z++;
-		moveArr[z].first = x;
-		moveArr[z].second = -x;
+		moveArr[27-z].first = x;
+		moveArr[27-z].second = -x;
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
 		moveArr[z].second = x;
-		z++;
-		moveArr[z].first = x;
-		moveArr[z].second = 0;
+		moveArr[27-z].first = x;
+		moveArr[27-z].second = 0;
 		z++;
 	}
 	lm = 56;
@@ -262,18 +256,16 @@ Queen::Queen(bool side) {
 		if(x == 0) x++;
 		moveArr[z].first = x;
 		moveArr[z].second = x;
-		z++;
-		moveArr[z].first = x;
-		moveArr[z].second = -x;
+		moveArr[27-z].first = x;
+		moveArr[27-z].second = -x;
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
 		moveArr[z].second = x;
-		z++;
-		moveArr[z].first = x;
-		moveArr[z].second = 0;
+		moveArr[27-z].first = x;
+		moveArr[27-z].second = 0;
 		z++;
 	}
 	lm = 56;

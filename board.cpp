@@ -344,7 +344,10 @@ bool Board::isCheckmate(bool player) {
 					x2 = x + board[x][y].moveArr[z - board[x][y].lm].first;
 					y2 = y + board[x][y].moveArr[z - board[x][y].lm].second;
 				}
-				if(!legalMove(x, y, x2, y2)) continue;
+				if (!legalMove(x, y, x2, y2)) { 
+					if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') z += 7 - (z%7);
+					continue;
+				}
 				Piece p1 = board[x][y];
 				Piece p2 = board[x2][y2];
 				Piece p3 = board[4][y2];
@@ -395,7 +398,10 @@ void Board::makeMove() {
 				x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
 				y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
 			}
-			if(!legalMove(x, y, x2, y2)) continue;
+			if (!legalMove(x, y, x2, y2)) { 
+				if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') a += 7 - (a%7);
+				continue;
+			}
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
 			int score = minimax(2, turn, -32767, 32767);
 			if (!turn) {
@@ -525,7 +531,10 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 					x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
 					y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
 				}
-				if (!legalMove(x, y, x2, y2)) continue;
+				if (!legalMove(x, y, x2, y2)) { 
+					if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') a += 7 - (a%7);
+					continue;
+				}
 				turn = !turn;
 				Piece p1 = board[x][y];
 				Piece p2 = board[x2][y2];
@@ -568,7 +577,10 @@ int Board::evaluateBoard() {
 					x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
 					y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
 				}
-				if (!legalMove(x, y, x2, y2)) continue;
+				if (!legalMove(x, y, x2, y2)) { 
+					if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') a += 7 - (a%7);
+					continue;
+				}
 				m++;
 		}
 		total += m * (board[x][y].type ? 1 : -1);
