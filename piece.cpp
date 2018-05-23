@@ -241,6 +241,7 @@ Queen::Queen() {
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
+		if(x == 0) x++;
 		moveArr[z].first = x;
 		moveArr[z].second = 0;
 		z++;
@@ -272,6 +273,7 @@ Queen::Queen(bool side) {
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
+		if(x == 0) x++;
 		moveArr[z].first = x;
 		moveArr[z].second = 0;
 		z++;
