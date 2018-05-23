@@ -57,6 +57,8 @@ class Promotion_Window(tk.Toplevel):
     def __init__(self, master):
         tk.Toplevel.__init__(self, master)
 
+        self.title("")
+
         self.master = master
 
     def set_attr(self, pos):
