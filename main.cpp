@@ -11,7 +11,7 @@ using namespace std;
 int main() {
 	ios_base::sync_with_stdio(false);
 	srand(time(NULL));
-	Board b(Player(false), Player(true));
+	Board b(Player(true), Player(true));
 	string input;
 	bool playing = true;
 	bool checkm8 = false;
