@@ -47,10 +47,11 @@ class Tile(tk.Button):
         y2 = self.row
 
         self.master.call_sub()
+        
         self.master.proc.communicate((self.master.col_dict[x1] + str(8-y1) + "\n").encode() + (self.master.col_dict[x2] + str(8-y2) + "\n").encode())
 
         self.master.to_move_label.config(text="")
-                
+
         return True
 
 class Promotion_Window(tk.Toplevel):
