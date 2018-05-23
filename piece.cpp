@@ -63,8 +63,8 @@ Rook::Rook() {
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
-		moveArr[z].second = x;
-		moveArr[27-z].first = x;
+		moveArr[z].second = x < 0 ? -1*(8 + x):x;
+		moveArr[27-z].first = x < 0 ? x:(8-x);
 		moveArr[27-z].second = 0;
 		z++;
 	}
@@ -82,8 +82,8 @@ Rook::Rook(bool side) {
 	for(int x = -7; x < 8; x++) {
 			if(x == 0) x++;
 			moveArr[z].first = 0;
-			moveArr[z].second = x;
-			moveArr[27-z].first = x;
+			moveArr[z].second = x < 0 ? -1*(8 + x):x;
+			moveArr[27-z].first = x < 0 ? x:(8-x);
 			moveArr[27-z].second = 0;
 			z++;
 		}
@@ -150,10 +150,10 @@ Bishop::Bishop() {
 	moveArr = new std::pair<int, int>[28];
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
-		moveArr[z].first = x;
-		moveArr[z].second = x;
-		moveArr[27-z].first = x;
-		moveArr[27-z].second = -x;
+		moveArr[z].first = x < 0 ? -1*(8+x):x;
+		moveArr[z].second = x < 0 ? -1*(8+x):x;
+		moveArr[27-z].first = x < 0 ? x:(8-x);
+		moveArr[27-z].second = x < 0 ? -x:-1*(8-x);
 		z++;
 	}
 	lm = 28;
@@ -169,10 +169,10 @@ Bishop::Bishop(bool side) {
 	moveArr = new std::pair<int, int>[28];
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
-		moveArr[z].first = x;
-		moveArr[z].second = x;
-		moveArr[27-z].first = x;
-		moveArr[27-z].second = -x;
+		moveArr[z].first = x < 0 ? -1*(8+x):x;
+		moveArr[z].second = x < 0 ? -1*(8+x):x;
+		moveArr[27-z].first = x < 0 ? x:(8-x);
+		moveArr[27-z].second = x < 0 ? -x:-1*(8-x);
 		z++;
 	}
 	lm = 28;
@@ -227,22 +227,22 @@ Queen::Queen() {
 	moveArr = new std::pair<int, int>[56];
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
-		moveArr[z].first = x;
-		moveArr[z].second = x;
-		moveArr[27-z].first = x;
-		moveArr[27-z].second = -x;
+		moveArr[z].first = x < 0 ? -1*(8+x):x;
+		moveArr[z].second = x < 0 ? -1*(8+x):x;
+		moveArr[27-z].first = x < 0 ? x:(8-x);
+		moveArr[27-z].second = x < 0 ? -x:-1*(8-x);
 		z++;
 	}
 	z = 28;
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
-		moveArr[z].second = x;
+		moveArr[z].second = x < 0 ? -1*(8 + x):x;
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
-		moveArr[z].first = x;
+		moveArr[z].first = x < 0 ? -1*(8 + x):x;
 		moveArr[z].second = 0;
 		z++;
 	}
@@ -259,22 +259,22 @@ Queen::Queen(bool side) {
 	moveArr = new std::pair<int, int>[56];
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
-		moveArr[z].first = x;
-		moveArr[z].second = x;
-		moveArr[27-z].first = x;
-		moveArr[27-z].second = -x;
+		moveArr[z].first = x < 0 ? -1*(8+x):x;
+		moveArr[z].second = x < 0 ? -1*(8+x):x;
+		moveArr[27-z].first = x < 0 ? x:(8-x);
+		moveArr[27-z].second = x < 0 ? -x:-1*(8-x);
 		z++;
 	}
 	z = 28;
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
-		moveArr[z].second = x;
+		moveArr[z].second = x < 0 ? -1*(8 + x):x;
 		z++;
 	}
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
-		moveArr[z].first = x;
+		moveArr[z].first = x < 0 ? -1*(8 + x):x;
 		moveArr[z].second = 0;
 		z++;
 	}

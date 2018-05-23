@@ -403,7 +403,7 @@ void Board::makeMove() {
 				continue;
 			}
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-			int score = minimax(2, turn, -32767, 32767);
+			int score = minimax(3, turn, -32767, 32767);
 			if (!turn) {
 				if (score < bestscore) {
 					moves[0].first.first = x;
