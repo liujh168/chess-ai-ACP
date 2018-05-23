@@ -516,7 +516,7 @@ void Board::undoMove() {
 int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 	if(depth == 0) {
 		//cout << -evaluateBoard() << ' ';
-		return evaluateBoard();
+		return -evaluateBoard();
 	}
 	else {
 		int bestscore = isMax ? -32767:32767;

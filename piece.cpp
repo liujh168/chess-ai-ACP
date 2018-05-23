@@ -233,12 +233,16 @@ Queen::Queen() {
 		moveArr[27-z].second = -x;
 		z++;
 	}
+	z = 28;
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
 		moveArr[z].second = x;
-		moveArr[27-z].first = x;
-		moveArr[27-z].second = 0;
+		z++;
+	}
+	for(int x = -7; x < 8; x++) {
+		moveArr[z].first = x;
+		moveArr[z].second = 0;
 		z++;
 	}
 	lm = 56;
@@ -260,12 +264,16 @@ Queen::Queen(bool side) {
 		moveArr[27-z].second = -x;
 		z++;
 	}
+	z = 28;
 	for(int x = -7; x < 8; x++) {
 		if(x == 0) x++;
 		moveArr[z].first = 0;
 		moveArr[z].second = x;
-		moveArr[27-z].first = x;
-		moveArr[27-z].second = 0;
+		z++;
+	}
+	for(int x = -7; x < 8; x++) {
+		moveArr[z].first = x;
+		moveArr[z].second = 0;
 		z++;
 	}
 	lm = 56;
