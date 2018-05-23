@@ -60,16 +60,40 @@ Board::Board(Player white, Player black) {
 	for (int x = 0; x < 8; x++) board[x][6] = Pawn(true);
 }
 
-bool Board::movePiece(int x1, int y1, int x2, int y2) {
+bool Board::movePiece(int x1, int y1, int x2, int y2, bool storeUndo) {
 	if (legalMove(x1, y1, x2, y2)) {
-		undo.first.first = board[x1][y1];
-		undo.second.first = board[x2][y2];
-		undo.first.second.first = x1;
-		undo.first.second.second = y1;
-		undo.second.second.first = x2;
-		undo.second.second.second = y2;
+		if(storeUndo) {
+			undo.first.first = board[x1][y1];
+			undo.second.first = board[x2][y2];
+			undo.first.second.first = x1;
+			undo.first.second.second = y1;
+			undo.second.second.first = x2;
+			undo.second.second.second = y2;
+		}
+		if(board[x1][y1].ident == 'R' && board[x2][y2].ident == '*' && !board[x1][y1].hasMoved && (x2 == 3 || x2 == 5) && board[4][y1].ident == 'K' && !board[5][y1].hasMoved && board[x1][y1].type == board[4][y1].type) {
+			if((turn && !black.isAi) || (!turn && !white.isAi)) {
+				cout << "Would you like to castle? (Y/N)" << endl;
+				char ans;
+				cin >> ans;
+				switch(ans) {
+					case 'Y':
+						board[5][y1].hasMoved = true;
+						board[x2 == 3 ? 2 : 6][y2] = board[4][y1];
+						board[4][y1] = Piece();
+						break;
+					default:
+						break;
+				}
+			}
+			else {
+				board[5][y1].hasMoved = true;
+				board[x2 == 3 ? 2 : 6][y2] = board[4][y1];
+				board[4][y1] = Piece();
+			}
+		}
 		board[x2][y2] = board[x1][y1];
 		board[x1][y1] = Piece();
+		board[x2][y2].hasMoved = true;
 		if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
 		return true;
 	}
@@ -101,10 +125,10 @@ bool Board::legalMove(int x1, int y1, int x2, int y2) {
 		if (abs(x1 - x2) == 1 && abs(y1 - y2) == 1) {
 			if (board[x2][y2].ident != '*') return true;
 			//en passant
-			/*else if ((undo.second.second.first == x1 - 1 || undo.second.second.first == x1 + 1) && (x2 == undo.second.second.first - 1) && undo.first.second.second == 7) {
+			else if ((undo.first.first.ident == 'P' && abs(undo.first.second.second - undo.second.second.second) == 2 && (undo.first.second.second == 1 || undo.first.second.second == 6)) && (x2 == undo.second.second.first && ((y2 == undo.second.second.second-1 && turn) || (y2 == undo.second.second.second + 1 && !turn)))) {
+				board[undo.second.second.first][undo.second.second.second] = Piece();
 				return true;
 			}
-			*/
 			else return false;
 		}
 	}
@@ -320,15 +344,32 @@ bool Board::isCheckmate(bool player) {
 					x2 = x + board[x][y].moveArr[z - board[x][y].lm].first;
 					y2 = y + board[x][y].moveArr[z - board[x][y].lm].second;
 				}
-				if(movePiece(x, y, x2, y2)) {
+				if (!legalMove(x, y, x2, y2)) { 
+					if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') z += 7 - (z%7);
+					continue;
+				}
+				Piece p1 = board[x][y];
+				Piece p2 = board[x2][y2];
+				Piece p3 = board[4][y2];
+				Piece p4 = board[2][y2];
+				Piece p5 = board[6][y2];
+				if(movePiece(x, y, x2, y2, false)) {
 					if (!isCheck(player)) {
-						undoMove();
+						board[x][y] = p1;
+						board[x2][y2] = p2;
+						board[4][y2] = p3;
+						board[2][y2] = p4;
+						board[6][y2] = p5;
 						msg = h;
 						turn = t;
 						return false;
 					}
-					undoMove();
 				}
+				board[x][y] = p1;
+				board[x2][y2] = p2;
+				board[4][y2] = p3;
+				board[2][y2] = p4;
+				board[6][y2] = p5;
 			}
 		}
 	}
@@ -357,9 +398,12 @@ void Board::makeMove() {
 				x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
 				y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
 			}
-			if(!legalMove(x, y, x2, y2)) continue;
+			if (!legalMove(x, y, x2, y2)) { 
+				if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') a += 7 - (a%7);
+				continue;
+			}
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-			int score = minimax(3, turn, -32767, 32767);
+			int score = minimax(2, turn, -32767, 32767);
 			if (!turn) {
 				if (score < bestscore) {
 					moves[0].first.first = x;
@@ -409,7 +453,7 @@ void Board::makeMove() {
 		x2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].first + bestx;
 		y2 = board[bestx][besty].spMoveArr[moveno - board[bestx][besty].lm].second + besty;
 	}
-	movePiece(bestx, besty, x2, y2);
+	movePiece(bestx, besty, x2, y2, true);
 	cout << "Move made" << endl;
 }
 
@@ -444,7 +488,7 @@ int Board::value(char piece, bool color, int x, int y) {
 	if (y < 0)
 		return -32767;
 	weight p = weight();
-	if (!color) {
+	if (color) {
 		switch (piece) {
 		case 'P': return p.pawnArr[x][y];
 		case 'N': return p.knightArr[x][y];
@@ -455,12 +499,12 @@ int Board::value(char piece, bool color, int x, int y) {
 		}
 	}
 	switch (piece) {
-	case 'P': return p.pawnArr[7 - x][y];
-	case 'N': return p.knightArr[7 - x][y];
-	case 'K': return p.kingArr[7 - x][y];
-	case 'B': return p.bishopArr[7 - x][y];
-	case 'R': return p.rookArr[7 - x][y];
-	case 'Q': return p.queenArr[7 - x][y];
+	case 'P': return p.pawnArr[x][7 - y];
+	case 'N': return p.knightArr[x][7 - y];
+	case 'K': return p.kingArr[x][7 - y];
+	case 'B': return p.bishopArr[x][7 - y];
+	case 'R': return p.rookArr[x][7 - y];
+	case 'Q': return p.queenArr[x][7 - y];
 	}
 }
 
@@ -487,18 +531,25 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 					x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
 					y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
 				}
-				if(!legalMove(x, y, x2, y2)) continue;
+				if (!legalMove(x, y, x2, y2)) { 
+					if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') a += 7 - (a%7);
+					continue;
+				}
 				turn = !turn;
 				Piece p1 = board[x][y];
 				Piece p2 = board[x2][y2];
-				board[x2][y2] = board[x][y];
-				board[x][y] = Piece();
-				if(board[x2][y2].ident == 'P' && (y2 == 7 || y2 == 0)) promotion(x2, y2);
+				Piece p3 = board[4][y2];
+				Piece p4 = board[2][y2];
+				Piece p5 = board[6][y2];
+				movePiece(x, y, x2, y2, false);
 				if(p2.ident != 'K') bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax, alpha, beta)):min(bestscore, minimax(depth-1, !isMax, alpha, beta));
 				else bestscore = isMax ? max(bestscore, minimax(0, !isMax, alpha, beta)):min(bestscore, minimax(0, !isMax, alpha, beta));
 				turn = !turn;
 				board[x][y] = p1;
 				board[x2][y2] = p2;
+				board[4][y2] = p3;
+				board[2][y2] = p4;
+				board[6][y2] = p5;
 				if(isMax) alpha = max(bestscore, alpha);
 				else beta = min(bestscore, beta);
 				if(beta <= alpha) break;
@@ -509,9 +560,31 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 }
 
 int Board::evaluateBoard() {
+	bool initTurn = turn;
 	int total = 0;
 	for(int x = 0; x < 8; x++) for(int y = 0; y < 8; y++) {
-		if(board[x][y].ident != '*') total += (1.5*board[x][y].weight + value(board[x][y].ident, board[x][y].type, x, y)) * (board[x][y].type ? 1 : -1);
+		if(board[x][y].ident != '*') total += (board[x][y].weight + value(board[x][y].ident, board[x][y].type, x, y)) * (board[x][y].type ? 1 : -1);
+		else continue;
+		turn = board[x][y].type;
+		int m = 0;
+		for (int a = 0; a < board[x][y].lm + (board[x][y].hasSp ? board[x][y].sp-1:0); a++) {
+				int x2, y2;
+				if(a < board[x][y].lm) {
+					x2 = board[x][y].moveArr[a].first + x;
+					y2 = board[x][y].moveArr[a].second + y;
+				}
+				else {
+					x2 = board[x][y].spMoveArr[a - board[x][y].lm].first + x;
+					y2 = board[x][y].spMoveArr[a - board[x][y].lm].second + y;
+				}
+				if (!legalMove(x, y, x2, y2)) { 
+					if(board[x][y].ident == 'Q' || board[x][y].ident == 'R' || board[x][y].ident == 'B') a += 7 - (a%7);
+					continue;
+				}
+				m++;
+		}
+		total += m * (board[x][y].type ? 1 : -1);
 	}
+	turn = initTurn;
 	return total;
 }

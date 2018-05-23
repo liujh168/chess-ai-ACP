@@ -36,7 +36,7 @@ int main() {
 				int x2 = input.at(0) - 65;
 				int y2 = input.at(1) - 49;
 				cout << x1 << " " << y1 << " " << x2 << " " << y2 << " " << endl;
-				mov = !b.movePiece(x1, y1, x2, y2);
+				mov = !b.movePiece(x1, y1, x2, y2, true);
 				b.promotion(x2, y2);
 			}
 			else {

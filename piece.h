@@ -8,6 +8,7 @@ class Piece {
 		int lm;
 		int sp;
 		int weight;
+		bool hasMoved = false;
 		std::pair<int, int>* moveArr;
 		std::pair<int, int>* spMoveArr;
 		char ident;
