@@ -482,7 +482,7 @@ int Board::value(char piece, bool color, int x, int y) {
 	if (y < 0)
 		return -32767;
 	weight p = weight();
-	if (!color) {
+	if (color) {
 		switch (piece) {
 		case 'P': return p.pawnArr[x][y];
 		case 'N': return p.knightArr[x][y];
@@ -493,12 +493,12 @@ int Board::value(char piece, bool color, int x, int y) {
 		}
 	}
 	switch (piece) {
-	case 'P': return p.pawnArr[7 - x][y];
-	case 'N': return p.knightArr[7 - x][y];
-	case 'K': return p.kingArr[7 - x][y];
-	case 'B': return p.bishopArr[7 - x][y];
-	case 'R': return p.rookArr[7 - x][y];
-	case 'Q': return p.queenArr[7 - x][y];
+	case 'P': return p.pawnArr[x][7 - y];
+	case 'N': return p.knightArr[x][7 - y];
+	case 'K': return p.kingArr[x][7 - y];
+	case 'B': return p.bishopArr[x][7 - y];
+	case 'R': return p.rookArr[x][7 - y];
+	case 'Q': return p.queenArr[x][7 - y];
 	}
 }
 
@@ -554,7 +554,7 @@ int Board::evaluateBoard() {
 	bool initTurn = turn;
 	int total = 0;
 	for(int x = 0; x < 8; x++) for(int y = 0; y < 8; y++) {
-		if(board[x][y].ident != '*') total += 2*board[x][y].weight * (board[x][y].type ? 1 : -1);
+		if(board[x][y].ident != '*') total += (board[x][y].weight + value(board[x][y].ident, board[x][y].type, x, y)) * (board[x][y].type ? 1 : -1);
 		else continue;
 		turn = board[x][y].type;
 		int m = 0;
@@ -571,7 +571,7 @@ int Board::evaluateBoard() {
 				if (!legalMove(x, y, x2, y2)) continue;
 				m++;
 		}
-		total += m*value(board[x][y].ident, board[x][y].type, x, y)/10 * (board[x][y].type ? 1 : -1);
+		total += m * (board[x][y].type ? 1 : -1);
 	}
 	turn = initTurn;
 	return total;
