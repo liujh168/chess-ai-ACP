@@ -403,7 +403,7 @@ void Board::makeMove() {
 				continue;
 			}
 			//int score = value(board[x2][y2].ident, board[x2][y2].type, x2, y2) + board[x2][y2].weight - value(board[x][y].ident, board[x][y].type, x, y);
-			int score = minimax(3, turn, -32767, 32767);
+			int score = minimax(2, turn, -32767, 32767);
 			if (!turn) {
 				if (score < bestscore) {
 					moves[0].first.first = x;
@@ -490,21 +490,21 @@ int Board::value(char piece, bool color, int x, int y) {
 	weight p = weight();
 	if (color) {
 		switch (piece) {
-		case 'P': return p.pawnArr[x][y];
-		case 'N': return p.knightArr[x][y];
-		case 'K': return p.kingArr[x][y];
-		case 'B': return p.bishopArr[x][y];
-		case 'R': return p.rookArr[x][y];
-		case 'Q': return p.queenArr[x][y];
+		case 'P': return p.pawnArr[y][x];
+		case 'N': return p.knightArr[y][x];
+		case 'K': return p.kingArr[y][x];
+		case 'B': return p.bishopArr[y][x];
+		case 'R': return p.rookArr[y][x];
+		case 'Q': return p.queenArr[y][x];
 		}
 	}
 	switch (piece) {
-	case 'P': return p.pawnArr[x][7 - y];
-	case 'N': return p.knightArr[x][7 - y];
-	case 'K': return p.kingArr[x][7 - y];
-	case 'B': return p.bishopArr[x][7 - y];
-	case 'R': return p.rookArr[x][7 - y];
-	case 'Q': return p.queenArr[x][7 - y];
+	case 'P': return p.pawnArr[y][7 - x];
+	case 'N': return p.knightArr[y][7 - x];
+	case 'K': return p.kingArr[y][7 - x];
+	case 'B': return p.bishopArr[y][7 - x];
+	case 'R': return p.rookArr[y][7 - x];
+	case 'Q': return p.queenArr[y][7 - x];
 	}
 }
 
@@ -542,7 +542,7 @@ int Board::minimax(int depth, bool isMax, int alpha, int beta) {
 				Piece p4 = board[2][y2];
 				Piece p5 = board[6][y2];
 				movePiece(x, y, x2, y2, false);
-				if(p2.ident != 'K') bestscore = isMax ? max(bestscore, minimax(depth-1, !isMax, alpha, beta)):min(bestscore, minimax(depth-1, !isMax, alpha, beta));
+				if(p2.ident != 'K') bestscore = isMax ? max(bestscore, (int) (minimax(depth-1, !isMax, alpha, beta) + 1.326*p2.weight*(p2.type ? 1 : -1))):min(bestscore, (int) (minimax(depth-1, !isMax, alpha, beta) + 1.326*p2.weight*(p2.type ? 1 : -1)));
 				else bestscore = isMax ? max(bestscore, minimax(0, !isMax, alpha, beta)):min(bestscore, minimax(0, !isMax, alpha, beta));
 				turn = !turn;
 				board[x][y] = p1;
